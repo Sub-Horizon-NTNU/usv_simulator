@@ -1,10 +1,35 @@
-# USV SIMULATOR
+# USV SIMULATOR (GUIDE IS STILL WORK IN PROGRESS)
 The main goal of this project is to be able to simulate Sub-Horizon/Selene in a environment similar to Autodrone.
 
 
 ## Dependencies
 
+
+
+### ROS2 Humble 
+#### Distrobox
+ If you're using a version of Ubuntu that is not equal to 22.04, we highly recommend using Distrobox. To setup distobox just use the following commands:
+ install : 
+
+ > sudo apt install distrobox
+
+Non NVIDIA GPU
+
+ > distrobox create -n ubuntu_2204 --image ubuntu:22.04
+
+NVIDIA GPU:
+
+> distrobox create -n ubuntu_2204 --image ubuntu:22.04 --nvidia
+
+After the distrobox is created you can enter the container by using the following command:
+> distrobox enter ubuntu_2204
+
+
+#### ROS2 Humble
+Follow the guide at: [ROS2 Humble Installation](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html)
+
 ### SITL
+
 
 ### MAVROS
 
@@ -25,7 +50,7 @@ Stonefish is the framework used for creating the simulation, it provides a physi
 #### Installation
 
 ##### Dependencies
-
+* GCC 13
 > sudo apt install libsdl2-dev libglm-dev libasio-dev 
 
 > git clone "https://github.com/patrykcieslak/stonefish.git"
@@ -44,9 +69,49 @@ Stonefish is the framework used for creating the simulation, it provides a physi
 
 Please refer to [Stonefish installation guide](https://stonefish.readthedocs.io/en/latest/install.html) if experiencing any issues.
 
+### Ardupilot SITL
+
+Clone ardupilot into src/
+> git clone --recurse-submodules https://github.com/ArduPilot/ardupilot.git
+
+> cd ardupilot && ./Tools/environment_install/install-prereqs-ubuntu.sh -y && cd ../../
+
+
+### Micro XRCEDDS GEN
+
+> vcs import --recursive --input  https://raw.githubusercontent.com/ArduPilot/ardupilot/master/Tools/ros2/ros2.repos src
+
+> sudo rosdep init 
+
+> rosdep update
+
+> source /opt/ros/humble/setup.bash
+
+> rosdep install --from-paths src --ignore-src -r -y
+
+#### Installing the MicroXRCEDDSGen build dependency:
+
+> sudo apt install default-jre
+
+> git clone --recurse-submodules https://github.com/ardupilot/Micro-XRCE-DDS-Gen.git
+
+> cd Micro-XRCE-DDS-Gen && ./gradlew assemble
+
+> echo "export PATH=\$PATH:$PWD/scripts" >> ~/.bashrc
+
+#### Test it by running:
+> source ~/.bashrc && microxrceddsgen -help
+You should expect to get some output
+
+### MAVProxy 
+> sudo apt-get install python3-dev python3-opencv python3-wxgtk4.0 python3-pip python3-matplotlib python3-lxml python3-pygame
+
+> python3 -m pip install PyYAML mavproxy --user
+
+> echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.bashrc
+
 
 #### Stonefish ROS2
-
 ## How to install
 
 ## How to run simulation
