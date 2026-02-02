@@ -1,10 +1,8 @@
-# USV SIMULATOR (GUIDE IS STILL WORK IN PROGRESS)
+# USV SIMULATOR (README TO BE UPDATED)
 The main goal of this project is to be able to simulate Sub-Horizon/Selene in a environment similar to Autodrone.
 
 
 ## Dependencies
-
-
 
 ### ROS2 Humble 
 #### Distrobox
@@ -27,8 +25,6 @@ After the distrobox is created you can enter the container by using the followin
 
 #### ROS2 Humble
 Follow the guide at: [ROS2 Humble Installation](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html)
-
-### SITL
 
 
 ### MAVROS
@@ -74,8 +70,14 @@ Please refer to [Stonefish installation guide](https://stonefish.readthedocs.io/
 Clone ardupilot into src/
 > git clone --recurse-submodules https://github.com/ArduPilot/ardupilot.git
 
-> cd ardupilot && ./Tools/environment_install/install-prereqs-ubuntu.sh -y && cd ../../
+> cd ardupilot && ./Tools/environment_install/install-prereqs-ubuntu.sh -y 
 
+Add Ålesund into locations.txt
+> echo 'AALESUND=62.469467785628,6.2369782900802155,0,270' >> Tools/autotest/locations.txt
+
+> cd ../../
+
+> 
 
 ### Micro XRCEDDS GEN
 
