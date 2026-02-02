@@ -75,6 +75,9 @@ Clone ardupilot into src/
 Add Ålesund into locations.txt
 > echo 'AALESUND=62.469467785628,6.2369782900802155,0,270' >> Tools/autotest/locations.txt
 
+Also run the line below. It fixes a issue that is making the ardupilot sitl dds launch arducopter instead of the desired ardurover.
+> mv ../temp_files/launch.py Tools/ros2/ardupilot_sitl/src/ardupilot_sitl/launch.py
+
 > cd ../../
 
 > 
@@ -117,7 +120,6 @@ You should expect to get some output
 ## How to install
 
 ## How to run simulation
-
 
 Then inside the usv simulator workspace run:
 > ros2 launch usv_simulator usv_simulator.launch.py
