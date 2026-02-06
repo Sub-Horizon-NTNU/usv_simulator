@@ -27,19 +27,6 @@ After the distrobox is created you can enter the container by using the followin
 Follow the guide at: [ROS2 Humble Installation](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html)
 
 
-### MAVROS
-
-> sudo apt install ros-humble-mavros
-
-Then install GeographicLib datasets by running the install_geographiclib_datasets.sh script:
-> ros2 run mavros install_geographiclib_datasets.sh
-
-> #Alternative:
-
-> wget https://raw.githubusercontent.com/mavlink/mavros/ros2/mavros/scripts/install_geographiclib_datasets.sh 
-
-> ./install_geographiclib_datasets.sh
-
 ### Stonefish (Simulator software)
 Stonefish is the framework used for creating the simulation, it provides a physicssimulator using Bullet Physics and visualization using OpenGL.
 
@@ -73,10 +60,10 @@ Clone ardupilot into src/
 > cd ardupilot && ./Tools/environment_install/install-prereqs-ubuntu.sh -y 
 
 Add Ålesund into locations.txt
-> echo 'AALESUND=62.469467785628,6.2369782900802155,0,270' >> Tools/autotest/locations.txt
+> echo '\nAALESUND=62.469467785628,6.2369782900802155,0,270' >> Tools/autotest/locations.txt
 
 Also run the line below. It fixes a issue that is making the ardupilot sitl dds launch arducopter instead of the desired ardurover.
-> mv ../temp_files/launch.py Tools/ros2/ardupilot_sitl/src/ardupilot_sitl/launch.py
+> mv ../../temp_files/launch.py Tools/ros2/ardupilot_sitl/src/ardupilot_sitl/launch.py
 
 > cd ../../
 
@@ -116,10 +103,18 @@ You should expect to get some output
 > echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.bashrc
 
 
-### MAVROS
-Head to src/ and clone the following repo:
+### MAVROS (Currently not integrated into launch)
+Head inside src and clone the following repo:
 > git clone https://github.com/mavlink/mavros.git
 
+> sudo apt install ros-humble-mavros
+
+Then install GeographicLib datasets by running the install_geographiclib_datasets.sh script:
+> wget https://raw.githubusercontent.com/mavlink/mavros/ros2/mavros/scripts/install_geographiclib_datasets.sh 
+
+> sudo chmod +x install_geographiclib_datasets.sh
+
+> ./install_geographiclib_datasets.sh
 
 ## Build
 After all the tiresome steps are completed it is time to build:
@@ -131,7 +126,3 @@ After all the tiresome steps are completed it is time to build:
 
 Then inside the usv simulator workspace run:
 > ros2 launch usv_simulator usv_simulator.launch.py
-
-
-
-> mavlink-routerd -e 127.0.0.1:14557 -e 127.0.0.1:14558 127.0.0.1:14550
