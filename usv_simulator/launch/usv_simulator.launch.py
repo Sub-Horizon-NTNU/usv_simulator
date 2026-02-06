@@ -9,6 +9,7 @@ def generate_launch_description():
     stonefish_ros2_dir = get_package_share_directory("stonefish_ros2")
     sitl_interface_dir = get_package_share_directory("sitl_interface")
     ardupilot_sitl_dir = get_package_share_directory("ardupilot_sitl")
+    mavros_dir = get_package_share_directory("mavros")
 
     simulation_data_arg = DeclareLaunchArgument(
         "simulation_data",
@@ -112,7 +113,21 @@ def generate_launch_description():
         period=0.0,
         actions=[include_ardupilot_sitl_launch]
     )
-    
+
+
+   # fcu_url_arg = DeclareLaunchArgument("fcu_url",default_value="udp://127.0.0.1:14550@14555")
+   # gcs_url_arg = DeclareLaunchArgument("gcs_url",default_value="udp://127.0.0.1:14550")
+   # mavros_launch = IncludeLaunchDescription(
+   #     PythonLaunchDescriptionSource(
+   #         PathJoinSubstitution([mavros_dir, "launch/apm.launch"])
+   #     ),
+   #     launch_arguments={
+   #         "fcu_url": LaunchConfiguration("fcu_url"),
+   #         "gcs_url": LaunchConfiguration("gcs_url"),
+   #     }.items()
+   # )
+
+
     return LaunchDescription([
         simulation_data_arg,
         scenario_desc_arg,
@@ -134,4 +149,7 @@ def generate_launch_description():
         include_stonefish_launch,
         delayed_ardupilot_sitl_launch,
         delayed_sitl_interface_launch
+        #fcu_url_arg,
+        #gcs_url_arg,
+        #mavros_launch
     ])

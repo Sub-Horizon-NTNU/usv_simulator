@@ -16,9 +16,9 @@ local MOTOR = {
 
 local SERVO = {
   S1 = 98, -- script5
-  S2 = 99, -- script5
-  S3 = 100, -- script5
-  S4 = 101 -- script5
+  S2 = 99, -- script6
+  S3 = 100, -- script7
+  S4 = 101 -- script8
 }
 
 
@@ -28,19 +28,18 @@ local ROVER_FUNCTION = {
   THROTTLE_RIGHT = 74,
   STEERING = 26
 }
--- Utilities:
+
+-- Utilities:1
 
 function scale(x, in_min, in_max,  out_min,  out_max)
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 end
-
-
 --
-
 
 local throttle_scaled  = 0
 local steering_angle = 0
 
+local omni_angle = math.floor(scale(45,0,360,500.0,2500.0))-500
 
 local steering = 0
 local throttle = 0
@@ -51,16 +50,13 @@ local yaw = 0
 local throttle_in = 0
 local steering_in = 0
 
-
-
  -- https://ardupilot.org/sub/docs/common-lua-scripts.html
-function update()
+function update() 
   if not arming:is_armed() then
-    -- if not armed move all motors and servos to mid
-    SRV_Channels:set_output_pwm(MOTOR.M1, THRUSTER_MIDPOINT)
-    SRV_Channels:set_output_pwm(MOTOR.M2, THRUSTER_MIDPOINT)
-    SRV_Channels:set_output_pwm(MOTOR.M3, THRUSTER_MIDPOINT)
-    SRV_Channels:set_output_pwm(MOTOR.M4, THRUSTER_MIDPOINT)
+    --SRV_Channels:set_output_pwm(MOTOR.M1, THRUSTER_MIDPOINT)
+    --SRV_Channels:set_output_pwm(MOTOR.M2, THRUSTER_MIDPOINT)
+    --SRV_Channels:set_output_pwm(MOTOR.M3, THRUSTER_MIDPOINT)
+    --SRV_Channels:set_output_pwm(MOTOR.M4, THRUSTER_MIDPOINT)
     SRV_Channels:set_output_pwm(SERVO.S1, SERVO_MIDPOINT)
     SRV_Channels:set_output_pwm(SERVO.S2, SERVO_MIDPOINT)
     SRV_Channels:set_output_pwm(SERVO.S3, SERVO_MIDPOINT)
@@ -70,40 +66,49 @@ function update()
     steering_in = SRV_Channels:get_output_scaled(ROVER_FUNCTION.STEERING)
 
   else
-    -- retrieve high level steering and throttle control outputs from vehicle in -1 to +1 range
+    -- retrieve steering and throttle control outputs from vehicle in -1 to +1 range
     steering = vehicle:get_control_output(CONTROL_OUTPUT_YAW)
     throttle = vehicle:get_control_output(CONTROL_OUTPUT_THROTTLE)
-    throttle_scaled = math.floor(scale(throttle,0,1.0,1100.0,1900.0))
-    steering_angle = math.floor(scale(steering,1.0,-1.0,1000.0,2000.0))
-    if(math.abs(steering_angle-SERVO_MIDPOINT) < 10) then
-      steering_angle = SERVO_MIDPOINT
+    throttle_scaled = math.floor(scale(throttle,0,1.0, 0, 100))
+    steering_angle =  math.floor(scale(steering,-1,1, -25, 25))
+    local sumn = math.floor(scale(throttle_scaled-steering_angle,0,100, 1100,1900))
+    local sump = math.floor(scale(throttle_scaled+steering_angle,0,100, 1100,1900))
+
+    if(sumn>1900) then 
+        sumn = 1900
+    end
+    if(sump>1900) then
+        sump = 1900
     end
 
-    if(math.abs(throttle_scaled-THRUSTER_MIDPOINT) < 100) then
-      throttle_scaled = THRUSTER_MIDPOINT
+    if(sumn<1100) then
+        sumn = 1100
     end
+    if(sump<1100) then
+        sumn = 1100
+    end
+    
+    --SRV_Channels:set_output_pwm(MOTOR.M1, sump) 
+    --SRV_Channels:set_output_pwm(MOTOR.M2, sump) 
+    --SRV_Channels:set_output_pwm(MOTOR.M3, sumn) 
+    --SRV_Channels:set_output_pwm(MOTOR.M4, sumn)
 
-
-
-    SRV_Channels:set_output_pwm(MOTOR.M1, throttle_scaled) 
-    SRV_Channels:set_output_pwm(MOTOR.M2, throttle_scaled) 
-    SRV_Channels:set_output_pwm(MOTOR.M3, throttle_scaled) 
-    SRV_Channels:set_output_pwm(MOTOR.M4, throttle_scaled)
-
-    SRV_Channels:set_output_pwm(SERVO.S1, SERVO_MIDPOINT) 
-    SRV_Channels:set_output_pwm(SERVO.S2, steering_angle) 
-    SRV_Channels:set_output_pwm(SERVO.S3, SERVO_MIDPOINT) 
-    SRV_Channels:set_output_pwm(SERVO.S4, steering_angle) 
+    SRV_Channels:set_output_pwm(SERVO.S1, SERVO_MIDPOINT+omni_angle) 
+    SRV_Channels:set_output_pwm(SERVO.S2, SERVO_MIDPOINT-omni_angle) 
+    SRV_Channels:set_output_pwm(SERVO.S3, SERVO_MIDPOINT-omni_angle) 
+    SRV_Channels:set_output_pwm(SERVO.S4, SERVO_MIDPOINT+omni_angle) 
 
 
   end
   
   --gcs:send_text(6, string.format("Yaw:%5.3f", math.deg(yaw)))
-  --gcs:send_text(6, string.format("Thr:%d Str:%d", throttle_scaled, steering_angle))
+--gcs:send_text(6, string.format("Str:%d", math.floor(scale(omni_angle+SERVO_MIDPOINT,500,2500,0,360))))
 
-  return update, 10 -- run at 100hz
+  return update, 20 
 end
 --yaw = ahrs:get_yaw_rad() 
+
+
 
 
 gcs:send_text(6, "azimuth_script.lua is running")
