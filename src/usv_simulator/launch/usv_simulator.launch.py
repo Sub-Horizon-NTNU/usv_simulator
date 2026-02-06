@@ -115,17 +115,17 @@ def generate_launch_description():
     )
 
 
-   # fcu_url_arg = DeclareLaunchArgument("fcu_url",default_value="udp://127.0.0.1:14550@14555")
-   # gcs_url_arg = DeclareLaunchArgument("gcs_url",default_value="udp://127.0.0.1:14550")
-   # mavros_launch = IncludeLaunchDescription(
-   #     PythonLaunchDescriptionSource(
-   #         PathJoinSubstitution([mavros_dir, "launch/apm.launch"])
-   #     ),
-   #     launch_arguments={
-   #         "fcu_url": LaunchConfiguration("fcu_url"),
-   #         "gcs_url": LaunchConfiguration("gcs_url"),
-   #     }.items()
-   # )
+   fcu_url_arg = DeclareLaunchArgument("fcu_url",default_value="udp://127.0.0.1:14550@14555")
+   gcs_url_arg = DeclareLaunchArgument("gcs_url",default_value="udp://@127.0.0.1:14560")
+   mavros_launch = IncludeLaunchDescription(
+       PythonLaunchDescriptionSource(
+           PathJoinSubstitution([mavros_dir, "launch/apm.launch"])
+       ),
+       launch_arguments={
+           "fcu_url": LaunchConfiguration("fcu_url"),
+           "gcs_url": LaunchConfiguration("gcs_url"),
+       }.items()
+   )
 
 
     return LaunchDescription([
@@ -148,8 +148,8 @@ def generate_launch_description():
         slave_arg,
         include_stonefish_launch,
         delayed_ardupilot_sitl_launch,
-        delayed_sitl_interface_launch
-        #fcu_url_arg,
-        #gcs_url_arg,
-        #mavros_launch
+        delayed_sitl_interface_launch,
+        fcu_url_arg,
+        gcs_url_arg,
+        mavros_launch
     ])
