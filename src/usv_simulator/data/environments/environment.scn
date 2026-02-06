@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<scenario>
+  <environment>
+    <ned latitude="62.4694624523072" longitude="6.236972808837891"/> <!--Ålesund -->
+    <ocean>   
+        <water density="1031.0" jerlov="0.40"/>
+        <waves height="0.1"/>
+        <particles enabled="true"/>
+        <current type="uniform">
+            <velocity xyz="0.0 0.0 0.0"/>
+        </current>
+    </ocean>
+    <atmosphere>
+        <sun azimuth="-88.0" elevation="20.0"/>
+    </atmosphere>
+  </environment>
+
+    <static name="Bottom" type="terrain">
+      <height_map filename="../textures/output_heightmap.png"/>
+      <dimensions scalex="3.5714285714" scaley="3.5714285714" height="40.027"/>
+      <material name="Sand"/>
+      <look name="output_map_texture"/>
+      <world_transform xyz="0.0 0.0 0.6" rpy="0.0 0.0 -1.57079632679.0"/>
+    </static>
+    <!-- Image quality is quite bad, but atleast its smth..
+        NB:  Center of map must be NED origin
+    -->
+    <!-- https://manticorp.github.io/unrealheightmap/#latitude/62.4694624523072/longitude/6.236972808837891/zoom/15/outputzoom/15/width/500/height/150/outputformat/png16 -->
+    
+</scenario>
+
+
