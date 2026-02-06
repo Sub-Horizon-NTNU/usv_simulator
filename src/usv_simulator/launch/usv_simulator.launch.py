@@ -3,6 +3,8 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch_xml.launch_description_sources import XMLLaunchDescriptionSource
+
 
 def generate_launch_description():
     stonefish_sim_dir = get_package_share_directory("usv_simulator")
@@ -107,25 +109,29 @@ def generate_launch_description():
             "sim_address" : LaunchConfiguration("sim_address"),
             "slave" : LaunchConfiguration("slave")
         }.items()
-    
     )
+
     delayed_ardupilot_sitl_launch = TimerAction(
         period=0.0,
         actions=[include_ardupilot_sitl_launch]
     )
 
-
     fcu_url_arg = DeclareLaunchArgument("fcu_url",default_value="udp://127.0.0.1:14550@14555")
     gcs_url_arg = DeclareLaunchArgument("gcs_url",default_value="udp://@127.0.0.1:14560")
     mavros_launch = IncludeLaunchDescription(
-       PythonLaunchDescriptionSource(
+       XMLLaunchDescriptionSource(
            PathJoinSubstitution([mavros_dir, "launch/apm.launch"])
        ),
        launch_arguments={
            "fcu_url": LaunchConfiguration("fcu_url"),
            "gcs_url": LaunchConfiguration("gcs_url"),
        }.items()
-   )
+    )
+    
+    delayed_mavros_launch = TimerAction(
+        period=15.0,
+        actions=[mavros_launch]
+    )
 
 
     return LaunchDescription([
@@ -151,5 +157,5 @@ def generate_launch_description():
         delayed_sitl_interface_launch,
         fcu_url_arg,
         gcs_url_arg,
-        mavros_launch
+        delayed_mavros_launch
     ])
