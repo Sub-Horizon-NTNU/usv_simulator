@@ -61,15 +61,15 @@ function update()
     SRV_Channels:set_output_pwm(SERVO.S2, SERVO_MIDPOINT)
     SRV_Channels:set_output_pwm(SERVO.S3, SERVO_MIDPOINT)
     SRV_Channels:set_output_pwm(SERVO.S4, SERVO_MIDPOINT)
-    yaw = ahrs:get_yaw_rad()
-    throttle_in = SRV_Channels:get_output_scaled(ROVER_FUNCTION.THROTTLE)
-    steering_in = SRV_Channels:get_output_scaled(ROVER_FUNCTION.STEERING)
+    --yaw = ahrs:get_yaw_rad()
+    --throttle_in = SRV_Channels:get_output_scaled(ROVER_FUNCTION.THROTTLE)
+    --steering_in = SRV_Channels:get_output_scaled(ROVER_FUNCTION.STEERING)
   else
     -- retrieve steering and throttle control outputs from vehicle in -1 to +1 range
-    steering = vehicle:get_control_output(CONTROL_OUTPUT_YAW)
-    throttle = vehicle:get_control_output(CONTROL_OUTPUT_THROTTLE)
-    throttle_scaled = math.floor(scale(throttle,0,1.0, 0, 100))
-    steering_angle =  math.floor(scale(steering,-1,1, -25, 25))
+    --steering = vehicle:get_control_output(CONTROL_OUTPUT_YAW)
+    --throttle = vehicle:get_control_output(CONTROL_OUTPUT_THROTTLE)
+    --throttle_scaled = math.floor(scale(throttle,0,1.0, 0, 100))
+    --steering_angle =  math.floor(scale(steering,-1,1, -25, 25))
   
 
     SRV_Channels:set_output_pwm(SERVO.S1, SERVO_MIDPOINT+omni_angle) 
@@ -83,7 +83,7 @@ function update()
   --gcs:send_text(6, string.format("Yaw:%5.3f", math.deg(yaw)))
 --gcs:send_text(6, string.format("Str:%d", math.floor(scale(omni_angle+SERVO_MIDPOINT,500,2500,0,360))))
 
-  return update, 20 
+  return update, 20
 end
 --yaw = ahrs:get_yaw_rad() 
 
