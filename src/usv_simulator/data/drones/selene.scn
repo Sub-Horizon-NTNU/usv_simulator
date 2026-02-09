@@ -284,23 +284,23 @@
 
     <!--Sensors-->
         <sensor name="Dcam" rate="30.0" type="depthcamera">
-            <specs resolution_x="720" resolution_y="1280" horizontal_fov="120.0" vertical_fov="70.0" depth_min="0.2" depth_max="20.0"/>
+            <specs resolution_x="1920" resolution_y="1080" horizontal_fov="105.0" vertical_fov="78.0" depth_min="0.2" depth_max="20.0"/>
             <noise depth="0.02"/>
-            <origin xyz="0.5 0.0 -0.2" rpy="0.0 1.57079632679 0.0"/>
+            <origin xyz="0.6 0.0 -0.2" rpy="-1.57079632679 -3.14159265359-1.57079632679"/>
             <link name="Base"/>
             <ros_publisher topic="/sensors/depth_camera"/>
         </sensor>
 
-         <sensor name="Ccam" rate="30.0" type="camera">
-            <specs resolution_x="720" resolution_y="1280" horizontal_fov="120.0" vertical_fov="70.0"/>
-            <origin xyz="0.5 0.0 -0.2" rpy="0.0 1.57079632679 0.0"/>
+        <sensor name="Ccam" rate="30.0" type="camera">
+            <specs resolution_x="1920" resolution_y="1080" horizontal_fov="105.0" vertical_fov="78.0"/>
+            <origin xyz="0.6 0.0 -0.2" rpy="-1.57079632679 -3.14159265359-1.57079632679"/>
             <link name="Base"/>
             <ros_publisher topic="/sensors/color_camera"/>
         </sensor>
 
         <sensor name="SCam" rate="5.0" type="segmentation">
-            <specs resolution_x="720" resolution_y="1280" horizontal_fov="120.0" vertical_fov="70.0"/>
-            <origin xyz="0.5 0.0 -0.2" rpy="0.0 1.57079632679 0.0"/>
+            <specs resolution_x="1920" resolution_y="1080" horizontal_fov="105.0" vertical_fov="78.0"/>
+            <origin xyz="0.6 0.0 -0.2" rpy="-1.57079632679 -3.14159265359-1.57079632679"/>
             <link name="Base"/>
             <ros_publisher topic="/sensors/segmentation_camera"/>
         </sensor>
@@ -310,7 +310,7 @@
             <range angular_velocity="10.0 10.0 10.0" linear_acceleration="10.0"/>
             <noise angle="0.000000001 0.000001 0.000005" angular_velocity="0.00000005" yaw_drift="0.0000001" linear_acceleration="0.0001"/>
             <history samples="1"/>
-            <origin xyz="0.1 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
             <link name="Base"/>
             <ros_publisher topic="/sensors/imu"/>
         </sensor>
