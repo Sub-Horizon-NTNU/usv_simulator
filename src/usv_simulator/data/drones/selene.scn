@@ -23,8 +23,6 @@
             </external_part>
 
 
-
-
             <external_part name="selene_hull_r" type="model" physics="floating" buoyant="true">
                 <physical>
                     <mesh filename="../meshes/White.obj" scale="1"/>

@@ -5,5 +5,5 @@
     <include file="$(find usv_simulator)/data/materials/materials.scn"/>
     <include file="$(find usv_simulator)/data/environments/environment.scn"/>
     <include file="$(find usv_simulator)/data/drones/selene.scn"/>
-    <!-- <include file="$(find usv_simulator)/data/challenges/obstacle_challenge.scn"/> -->
+    <include file="$(find usv_simulator)/data/challenges/obstacle_challenge.scn"/>
 </scenario>

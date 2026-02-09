@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <scenario>
-  <animated name="BuoyGreenStarboard" type="model"collisions ="true">
+  <animated name="BuoyGreenStarboard" type="model"collisions ="false">
     <physical>
       <mesh filename="../meshes/BuoyRow.obj" scale="1.0" convex="true"/>
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
@@ -19,7 +19,7 @@
   </trajectory>
   </animated>
 
-  <animated name="BuoyRedPort" type="model" collisions="true">
+  <animated name="BuoyRedPort" type="model" collisions="false">
     <physical>
       <mesh filename="../meshes/BuoyRow.obj" scale="1.0" convex="true"/>
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
