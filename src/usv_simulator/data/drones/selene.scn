@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<scenario>
+<scenario xmlns:xacro="http://www.ros.org/wiki/xacro">
     <robot name="selene" fixed="false" self_collisions="false">
     <!--  x 29cm , y 49 cm  from mid-->
         <world_transform xyz="0 0 -0.15" rpy="0 0 3.14159"/>

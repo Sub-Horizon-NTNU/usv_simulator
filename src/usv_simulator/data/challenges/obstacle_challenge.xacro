@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<scenario xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:macro name="buoy" params="name color x y">
+    <static name="${name}" type="model">
+        <physical>
+            <mesh filename="../meshes/Buoy.obj" scale="1.0" convex="true"/>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        </physical>
+        <visual>
+            <mesh filename="../meshes/Buoy.obj" scale="1.0"/>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        </visual>
+        <material name="Rock"/>
+        <look name="${color}"/>
+        <world_transform xyz="${x} ${y} 0.0" rpy="0.0 0.0 0.0"/>
+    </static>
+</xacro:macro>
+
+
+<!-- Obstacle challange-->
+<xacro:buoy name="R1_ch1" color="Red" x="10.0" y="5.0"/>
+<xacro:buoy name="R2_ch1" color="Red" x="20.0" y="5.0"/>
+<xacro:buoy name="R3_ch1" color="Red" x="30.0" y="5.0"/>
+<xacro:buoy name="R4_ch1" color="Red" x="40.0" y="5.0"/>
+<xacro:buoy name="R5_ch1" color="Red" x="50.0" y="5.0"/>
+<xacro:buoy name="R6_ch1" color="Red" x="60.0" y="5.0"/>
+<xacro:buoy name="R7_ch1" color="Red" x="70.0" y="5.0"/>
+<xacro:buoy name="R8_ch1" color="Red" x="80.0" y="5.0"/>
+<xacro:buoy name="R4_ch1" color="Red" x="90.0" y="5.0"/>
+<xacro:buoy name="R4_ch1" color="Red" x="100.0" y="5.0"/>
+
+
+<xacro:buoy name="B1_ch1" color="Blue" x="10.0" y="10.0"/>
+<xacro:buoy name="B2_ch1" color="Blue" x="20.0" y="10.0"/>
+<xacro:buoy name="B3_ch1" color="Blue" x="30.0" y="10.0"/>
+<xacro:buoy name="B4_ch1" color="Blue" x="40.0" y="10.0"/>
+<xacro:buoy name="B5_ch1" color="Blue" x="50.0" y="10.0"/>
+<xacro:buoy name="B6_ch1" color="Blue" x="60.0" y="10.0"/>
+<xacro:buoy name="B7_ch1" color="Blue" x="70.0" y="10.0"/>
+<xacro:buoy name="B8_ch1" color="Blue" x="80.0" y="10.0"/>
+<xacro:buoy name="B4_ch1" color="Blue" x="90.0" y="10.0"/>
+<xacro:buoy name="B4_ch1" color="Blue" x="100.0" y="10.0"/>
+
+</scenario>
+
+
+

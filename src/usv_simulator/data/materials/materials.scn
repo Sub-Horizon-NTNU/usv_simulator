@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<scenario>
+<scenario xmlns:xacro="http://www.ros.org/wiki/xacro">
     <materials>
         <material name="Neutral" density="1000.0" restitution="0.5"/>
         <friction_table>

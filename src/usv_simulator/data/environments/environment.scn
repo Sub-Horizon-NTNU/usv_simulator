@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<scenario>
+<scenario xmlns:xacro="http://www.ros.org/wiki/xacro">
   <environment>
     <ned latitude="62.4694624523072" longitude="6.236972808837891"/> <!--Ålesund -->
     <ocean>   

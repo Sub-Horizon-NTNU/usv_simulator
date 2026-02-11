@@ -1,20 +1,25 @@
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction, ExecuteProcess, RegisterEventHandler
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_xml.launch_description_sources import XMLLaunchDescriptionSource
+import xacro
+import subprocess
+import os
 
+stonefish_sim_dir = get_package_share_directory("usv_simulator")
+stonefish_ros2_dir = get_package_share_directory("stonefish_ros2")
+sitl_interface_dir = get_package_share_directory("sitl_interface")
+ardupilot_sitl_dir = get_package_share_directory("ardupilot_sitl")
+mavros_dir = get_package_share_directory("mavros")
+xacro_path = os.path.join(stonefish_sim_dir, "data", "main.scn.xacro")
+scn_path   = os.path.join(stonefish_sim_dir, "data", "main.scn")
+subprocess.run(["xacro", xacro_path, "-o", scn_path], check=True)
 
 def generate_launch_description():
-    stonefish_sim_dir = get_package_share_directory("usv_simulator")
-    stonefish_ros2_dir = get_package_share_directory("stonefish_ros2")
-    sitl_interface_dir = get_package_share_directory("sitl_interface")
-    ardupilot_sitl_dir = get_package_share_directory("ardupilot_sitl")
-    mavros_dir = get_package_share_directory("mavros")
-
     simulation_data_arg = DeclareLaunchArgument(
-        "simulation_data",
+"simulation_data",
         default_value=PathJoinSubstitution([stonefish_sim_dir, "data/drones"]),
         description="Path to the simulation data folder",
     )
@@ -22,24 +27,13 @@ def generate_launch_description():
     scenario_desc_arg = DeclareLaunchArgument(
         "scenario_desc",
         description="Path to the scenario file (.scn)",
-        default_value=PathJoinSubstitution([stonefish_sim_dir, "data/main.scn"])
+        default_value=scn_path
     )
 
-    window_res_x_arg = DeclareLaunchArgument(
-        "window_res_x", default_value="1920", description="Window width"
-    )
-
-    window_res_y_arg = DeclareLaunchArgument(
-        "window_res_y", default_value="1080", description="Window height"
-    )
-
-    quality_arg = DeclareLaunchArgument(
-        "rendering_quality", default_value="high"
-    )
-
-    ip_address_arg = DeclareLaunchArgument(
-            'ip_address', default_value="127.0.0.1"
-    )
+    window_res_x_arg = DeclareLaunchArgument("window_res_x", default_value="1920", description="Window width" )
+    window_res_y_arg = DeclareLaunchArgument("window_res_y", default_value="1080", description="Window height")
+    quality_arg = DeclareLaunchArgument("rendering_quality", default_value="high")
+    ip_address_arg = DeclareLaunchArgument('ip_address', default_value="127.0.0.1")
     
     #include stonefish simulator launch
     include_stonefish_launch = IncludeLaunchDescription(
@@ -69,25 +63,15 @@ def generate_launch_description():
     )
 
     transport_arg = DeclareLaunchArgument("transport", default_value="udp4")
-
     synthetic_clock_arg = DeclareLaunchArgument("synthetic_clock", default_value="False")
-
     wipe_arg = DeclareLaunchArgument("wipe",default_value="False")
-
     instance_arg = DeclareLaunchArgument("instance", default_value="0")
-
     model_arg = DeclareLaunchArgument("model",default_value="JSON")
-
     speedup_arg = DeclareLaunchArgument("speedup", default_value="1")
-
     master_arg = DeclareLaunchArgument("master",default_value="tcp:127.0.0.1:5760")
-
     home_arg = DeclareLaunchArgument("home",default_value="AALESUND")
-    
     defaults_arg = DeclareLaunchArgument("defaults",default_value= PathJoinSubstitution([ardupilot_sitl_dir,"config","default_params","rover.parm"])) # Rover parameters
-
     sim_address_arg = DeclareLaunchArgument("sim_address", default_value="127.0.0.1") # 
-
     slave_arg = DeclareLaunchArgument("slave", default_value="0")
 
 
@@ -132,7 +116,6 @@ def generate_launch_description():
         period=15.0,
         actions=[mavros_launch]
     )
-
 
     return LaunchDescription([
         simulation_data_arg,

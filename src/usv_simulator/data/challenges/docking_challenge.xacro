@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<scenario xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:macro name="dock" params="x y z dim_x dim_y dim_z">
+    <static name="conc" type="box">
+        <dimensions xyz="${dim_x} ${dim_y} ${dim_z}"/>
+        <material name="Rock"/>
+        <look name="Gray"/>
+        <world_transform xyz="${x} ${y} ${z}" rpy="0 0 0"/>
+    </static>
+    <static name="wood1" type="box">
+        <dimensions xyz="30.0 0.25 0.2"/>
+        <material name="Rock"/>
+        <look name="Wood"/>
+        <world_transform xyz="${x} ${y-dim_y/2} ${dim_z+z}" rpy="0 0 0"/>
+    </static>
+    <static name="wood2" type="box">
+        <dimensions xyz="30.0 0.25 0.2"/>
+        <material name="Rock"/>
+        <look name="Wood"/>
+    <world_transform xyz="${x} ${y+dim_y/2} ${dim_z+z}" rpy="0 0 0"/>
+    </static>
+</xacro:macro>
+
+
+<xacro:dock x="20" y="20.0" z="0.0" dim_x="30.0" dim_y="2.5" dim_z = "0.3"/>
+
+
+</scenario>
