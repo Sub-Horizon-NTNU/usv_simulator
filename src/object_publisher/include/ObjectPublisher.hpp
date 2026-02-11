@@ -32,10 +32,8 @@ public:
         start_position_.pose.pose.position.y = 0;
         start_position_.pose.pose.position.z = 0;
     
-        
         add_buoys(10,5,0,"red",0,10.0f,10);
         add_buoys(10,10,0,"green",0,10.0f,10);
-
 
         position_subscriber_= this->create_subscription<nav_msgs::msg::Odometry>(
             "/mavros/global_position/local", 10, std::bind(&ObjectPublisher::position_cb, this, std::placeholders::_1));
@@ -50,8 +48,6 @@ public:
 
     void parse_buoys(){
         //pugi::xml_document doc;
-
-
     }
     
     void position_cb(nav_msgs::msg::Odometry position_msg){
@@ -72,25 +68,23 @@ public:
         current_heading_ = yaw;
     }
 
-    
-
     void publish_buoys(){
         object_msgs::msg::Buoys buoy_pub_msg;
-        buoy_pub_msg = buoys_msg;
 
         double position_x =current_position_.pose.pose.position.x;
         double position_y =current_position_.pose.pose.position.y;
 
-        for(auto buoy: buoy_pub_msg){
-            if((relative_angle(position_x,position_y,buoy.x,buoy.y)<=field_of_view_deg_*(M_PI/180)) && (std::hypot(position_x-buoy.x,position_y-buoy.y)) <= radius_){
-                RCLCPP_INFO(this->get_logger(), "Buoy detected at x: %f y:%f",buoy.x,buoy.y);
+        // run throught all buoys and check angle and distance
 
+        for(const auto &buoy : buoys_.buoys){
+            if((relative_angle(position_x,position_y,buoy.pos_x,buoy.pos_y)<=field_of_view_deg_*(M_PI/180)) && (std::hypot(position_x-buoy.pos_x,position_y-buoy.pos_y)) <= radius_){
+                RCLCPP_INFO(this->get_logger(), "Buoy detected at x: %f y:%f",buoy.pos_x,buoy.pos_y);
             }
         }
     }
 
     inline double relative_angle(const double &usv_x, const double &usv_y, const double &buoy_x, const double &buoy_y){
-        return angle = std::atan2(usv_x-buoy_x,usv_y-buoy_y)
+        return std::atan2(usv_x-buoy_x,usv_y-buoy_y);
     }
 
     void add_buoys(double start_x, double start_y, double z, std::string color, double heading, double space, int amount){
@@ -105,23 +99,25 @@ public:
         object_msgs::msg::Buoy buoy;
         buoy.pos_x = x; buoy.pos_y = y; buoy.pos_z = z;
         buoy.color = color;
-        buoys_msg.buoys.push_back(buoy);
-        buoys_msg.amount +=1;
+        buoys_.buoys.push_back(buoy);
+        buoys_.amount +=1;
     }
 
 private:
+    const double radius_ = 20.0;
+    const double field_of_view_deg_=78.0;
+    
     nav_msgs::msg::Odometry start_position_;
-    double current_heading_{};
     nav_msgs::msg::Odometry current_position_;
+    double current_heading_{};
+    
     object_msgs::msg::Buoys buoys_;
+    uint32_t buoy_count_{};
+    
     rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr position_subscriber_;
     rclcpp::Publisher<object_msgs::msg::Buoys>::SharedPtr buoy_publisher_;
     rclcpp::Publisher<object_msgs::msg::Boats>::SharedPtr boat_publisher_;
-
     rclcpp::TimerBase::SharedPtr buoy_timer_;
-    uint32_t buoy_count_{};
-    const double radius_;
-    const double field_of_view_deg_=78.0;
     
 
 
