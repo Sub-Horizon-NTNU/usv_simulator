@@ -32,11 +32,15 @@ public:
         start_position_.pose.pose.position.y = 0;
         start_position_.pose.pose.position.z = 0;
     
-        add_buoys(10,5,0,"red",0,10.0f,10);
-        add_buoys(10,10,0,"green",0,10.0f,10);
+        add_buoys(10,5,0,"Red",0,10.0f,10);
+        add_buoys(10,10,0,"Green",0,10.0f,10);
+
+         auto qos_geo_pose = rclcpp::QoS(rclcpp::KeepLast(1))
+        .reliability(rclcpp::ReliabilityPolicy::BestEffort)
+        .durability_volatile();
 
         position_subscriber_= this->create_subscription<nav_msgs::msg::Odometry>(
-            "/mavros/global_position/local", 10, std::bind(&ObjectPublisher::position_cb, this, std::placeholders::_1));
+            "/mavros/global_position/local", qos_geo_pose, std::bind(&ObjectPublisher::position_cb, this, std::placeholders::_1));
         
         buoy_publisher_ = this->create_publisher<object_msgs::msg::Buoys>("/simulator/buoys",10);
         boat_publisher_ = this->create_publisher<object_msgs::msg::Boats>("/simulator/boats",10);
@@ -51,9 +55,11 @@ public:
     }
     
     void position_cb(nav_msgs::msg::Odometry position_msg){
-        current_position_.pose.pose.position.x = position_msg.pose.pose.position.x;
-        current_position_.pose.pose.position.y = position_msg.pose.pose.position.y;
-        current_position_.pose.pose.position.z = position_msg.pose.pose.position.z;
+//Mavros uses ENU, but we want NED
+
+        current_position_.pose.pose.position.x = position_msg.pose.pose.position.y;
+        current_position_.pose.pose.position.y = position_msg.pose.pose.position.x;
+        current_position_.pose.pose.position.z = -position_msg.pose.pose.position.z;
      
         tf2::Quaternion q(
             position_msg.pose.pose.orientation.x,
@@ -76,9 +82,10 @@ public:
 
         // run throught all buoys and check angle and distance
 
-        for(const auto &buoy : buoys_.buoys){
-            if((relative_angle(position_x,position_y,buoy.pos_x,buoy.pos_y)<=field_of_view_deg_*(M_PI/180)) && (std::hypot(position_x-buoy.pos_x,position_y-buoy.pos_y)) <= radius_){
-                RCLCPP_INFO(this->get_logger(), "Buoy detected at x: %f y:%f",buoy.pos_x,buoy.pos_y);
+        for(const auto &buoy : buoys_.buoys){ 
+            if(( relative_angle(position_x,position_y,buoy.pos_x,buoy.pos_y)<=field_of_view_deg_*(M_PI/180)) && (std::hypot(position_x-buoy.pos_x,position_y-buoy.pos_y)) <= radius_){
+                RCLCPP_INFO(this->get_logger(), "%s buoy detected at x_diff: %f y_diff:%f | buoy_pos: x: %f y %f | boat_pos: x: position_x: %f y: position_y: %f",buoy.color.c_str(), position_x-buoy.pos_x, position_y-buoy.pos_y, buoy.pos_x, buoy.pos_y, position_x, position_y);
+            
             }
         }
     }
@@ -104,7 +111,7 @@ public:
     }
 
 private:
-    const double radius_ = 20.0;
+    const double radius_ = 5.0;
     const double field_of_view_deg_=78.0;
     
     nav_msgs::msg::Odometry start_position_;

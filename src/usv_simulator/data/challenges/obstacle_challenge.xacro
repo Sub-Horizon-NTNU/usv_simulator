@@ -30,17 +30,16 @@
 <xacro:buoy name="R4_ch1" color="Red" x="90.0" y="5.0"/>
 <xacro:buoy name="R4_ch1" color="Red" x="100.0" y="5.0"/>
 
-
-<xacro:buoy name="B1_ch1" color="Blue" x="10.0" y="10.0"/>
-<xacro:buoy name="B2_ch1" color="Blue" x="20.0" y="10.0"/>
-<xacro:buoy name="B3_ch1" color="Blue" x="30.0" y="10.0"/>
-<xacro:buoy name="B4_ch1" color="Blue" x="40.0" y="10.0"/>
-<xacro:buoy name="B5_ch1" color="Blue" x="50.0" y="10.0"/>
-<xacro:buoy name="B6_ch1" color="Blue" x="60.0" y="10.0"/>
-<xacro:buoy name="B7_ch1" color="Blue" x="70.0" y="10.0"/>
-<xacro:buoy name="B8_ch1" color="Blue" x="80.0" y="10.0"/>
-<xacro:buoy name="B4_ch1" color="Blue" x="90.0" y="10.0"/>
-<xacro:buoy name="B4_ch1" color="Blue" x="100.0" y="10.0"/>
+<xacro:buoy name="B1_ch1" color="Green" x="10.0" y="10.0"/>
+<xacro:buoy name="B2_ch1" color="Green" x="20.0" y="10.0"/>
+<xacro:buoy name="B3_ch1" color="Green" x="30.0" y="10.0"/>
+<xacro:buoy name="B4_ch1" color="Green" x="40.0" y="10.0"/>
+<xacro:buoy name="B5_ch1" color="Green" x="50.0" y="10.0"/>
+<xacro:buoy name="B6_ch1" color="Green" x="60.0" y="10.0"/>
+<xacro:buoy name="B7_ch1" color="Green" x="70.0" y="10.0"/>
+<xacro:buoy name="B8_ch1" color="Green" x="80.0" y="10.0"/>
+<xacro:buoy name="B4_ch1" color="Green" x="90.0" y="10.0"/>
+<xacro:buoy name="B4_ch1" color="Green" x="100.0" y="10.0"/>
 
 </scenario>
 
