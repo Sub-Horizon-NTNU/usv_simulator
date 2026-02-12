@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<scenario xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<robot name="PassingBoat" fixed="false" self_collisions="false">
+    <!--  x 29cm , y 49 cm  from mid-->
+        <world_transform xyz="-10 -10 0" rpy="0 0 0"/>
+        <base_link name="Base" type="compound" physics="surface">
+            <external_part name="boat_model" type="model" physics="surface" buoyant="true">
+                <physical>
+                    <mesh filename="../meshes/SeaAngler.obj" scale="0.5"/>
+                    <origin rpy="0 0 0" xyz="0 0 0"/>
+                </physical>
+
+                <visual>
+                    <mesh filename="../meshes/SeaAngler.obj" scale="0.5"/>
+                    <origin rpy="0 0 0" xyz="0.0 0 0"/>
+                    <look name="Yellow"/>
+                </visual>
+                <material name="PolyCarbonatePlastic"/>
+                <look name="Yellow"/>
+                <mass value="20.0"/>
+                <cg xyz="0 0 0" rpy="0 0 0"/>
+                <compound_transform xyz="0 -0 0.0" rpy="3.14159 -1.570 0"/>
+            </external_part>
+        </base_link>
+
+
+    <!--ROS2 Integration
+        <sensor name="Odometry" rate="100.0" type="odometry">
+            <noise position="0.000001" velocity="0.0000001" angle="0.0000001" angular_velocity="0.000005"/> 
+            <history samples="10"/>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <link name="Base"/>
+            <ros_publisher topic="/boat/odometry"/>
+        </sensor>
+        -->
+    
+   
+
+    </robot>
+
+
+</scenario>

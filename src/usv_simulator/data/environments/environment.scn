@@ -20,7 +20,7 @@
       <dimensions scalex="3.5714285714" scaley="3.5714285714" height="40.027"/>
       <material name="Sand"/>
       <look name="output_map_texture"/>
-      <world_transform xyz="0.0 0.0 0.6" rpy="0.0 0.0 -1.57079632679.0"/>
+      <world_transform xyz="0.0 0.0 1.6" rpy="0.0 0.0 -1.57079632679.0"/>
     </static>
     <!-- Image quality is quite bad, but atleast its smth..
         NB:  Center of map must be NED origin
