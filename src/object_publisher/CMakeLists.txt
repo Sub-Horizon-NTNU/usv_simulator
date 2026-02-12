@@ -49,6 +49,8 @@ target_link_libraries(object_publisher pugixml::pugixml)
 install(TARGETS object_publisher
   DESTINATION lib/${PROJECT_NAME}
 )
-
-
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}
+)
 ament_package()

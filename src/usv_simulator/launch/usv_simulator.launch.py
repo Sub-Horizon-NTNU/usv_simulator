@@ -12,14 +12,15 @@ stonefish_sim_dir = get_package_share_directory("usv_simulator")
 stonefish_ros2_dir = get_package_share_directory("stonefish_ros2")
 sitl_interface_dir = get_package_share_directory("sitl_interface")
 ardupilot_sitl_dir = get_package_share_directory("ardupilot_sitl")
+object_publisher_dir = get_package_share_directory("object_publisher")
 mavros_dir = get_package_share_directory("mavros")
 xacro_path = os.path.join(stonefish_sim_dir, "data", "main.scn.xacro")
 scn_path   = os.path.join(stonefish_sim_dir, "data", "main.scn")
-subprocess.run(["xacro", xacro_path, "-o", scn_path], check=True)
+subprocess.run(["xacro", xacro_path, "-o", scn_path], check=True) # Generate scn from xacro files
 
 def generate_launch_description():
     simulation_data_arg = DeclareLaunchArgument(
-"simulation_data",
+        "simulation_data",
         default_value=PathJoinSubstitution([stonefish_sim_dir, "data/drones"]),
         description="Path to the simulation data folder",
     )
@@ -33,8 +34,8 @@ def generate_launch_description():
     window_res_x_arg = DeclareLaunchArgument("window_res_x", default_value="1920", description="Window width" )
     window_res_y_arg = DeclareLaunchArgument("window_res_y", default_value="1080", description="Window height")
     quality_arg = DeclareLaunchArgument("rendering_quality", default_value="high")
-    ip_address_arg = DeclareLaunchArgument('ip_address', default_value="127.0.0.1")
-    
+
+
     #include stonefish simulator launch
     include_stonefish_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -49,6 +50,23 @@ def generate_launch_description():
         }.items(),
     )
 
+    stonefish_launch_list = [
+        simulation_data_arg,
+        scenario_desc_arg,
+        window_res_x_arg,
+        window_res_y_arg,
+        quality_arg,
+        include_stonefish_launch
+        ]
+
+
+#Ardupilot SITL DDS launch, the parameters in the SITL class had to be overwritten for it to work. should be fixed in a future ardupilot release.
+# Also note that the DDS is most likely not used, but its implementation still remains available in case it is deemed practical.
+    
+    # SITL Interface   
+    ip_address_arg = DeclareLaunchArgument('ip_address', default_value="127.0.0.1")
+    
+
     include_sitl_interface_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution([sitl_interface_dir, "launch/sitl_interface.launch.py"])
@@ -57,10 +75,18 @@ def generate_launch_description():
             "ip_address" : LaunchConfiguration("ip_address")
             }.items()
     )
+    
     delayed_sitl_interface_launch = TimerAction(
         period=10.0,
         actions=[include_sitl_interface_launch]
     )
+
+
+    sitl_interface_launch_list = [
+        ip_address_arg,
+        include_sitl_interface_launch,
+        delayed_sitl_interface_launch
+    ]
 
     transport_arg = DeclareLaunchArgument("transport", default_value="udp4")
     synthetic_clock_arg = DeclareLaunchArgument("synthetic_clock", default_value="False")
@@ -73,8 +99,6 @@ def generate_launch_description():
     defaults_arg = DeclareLaunchArgument("defaults",default_value= PathJoinSubstitution([ardupilot_sitl_dir,"config","default_params","rover.parm"])) # Rover parameters
     sim_address_arg = DeclareLaunchArgument("sim_address", default_value="127.0.0.1") # 
     slave_arg = DeclareLaunchArgument("slave", default_value="0")
-
-
 
     include_ardupilot_sitl_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -100,6 +124,23 @@ def generate_launch_description():
         actions=[include_ardupilot_sitl_launch]
     )
 
+    sitl_launch_list = [
+        transport_arg,
+        synthetic_clock_arg,
+        wipe_arg,
+        instance_arg,
+        model_arg,
+        speedup_arg,
+        master_arg,
+        home_arg,
+        defaults_arg,
+        sim_address_arg,
+        slave_arg,
+        delayed_ardupilot_sitl_launch
+    ]
+
+## Mavros:
+
     fcu_url_arg = DeclareLaunchArgument("fcu_url",default_value="udp://127.0.0.1:14550@14555")
     gcs_url_arg = DeclareLaunchArgument("gcs_url",default_value="udp://@127.0.0.1:14560")
     mavros_launch = IncludeLaunchDescription(
@@ -117,28 +158,42 @@ def generate_launch_description():
         actions=[mavros_launch]
     )
 
-    return LaunchDescription([
-        simulation_data_arg,
-        scenario_desc_arg,
-        window_res_x_arg,
-        window_res_y_arg,
-        quality_arg,
-        ip_address_arg,
-        transport_arg,
-        synthetic_clock_arg,
-        wipe_arg,
-        instance_arg,
-        model_arg,
-        speedup_arg,
-        master_arg,
-        home_arg,
-        defaults_arg,
-        sim_address_arg,
-        slave_arg,
-        include_stonefish_launch,
-        delayed_ardupilot_sitl_launch,
-        delayed_sitl_interface_launch,
+    mavros_launch_list = [
         fcu_url_arg,
         gcs_url_arg,
-        delayed_mavros_launch
-    ])
+        delayed_mavros_launch,
+
+    ]
+
+
+ 
+## Object publisher node:
+    max_detection_radius_arg = DeclareLaunchArgument('max_detection_radius',default_value='20.0')
+    min_detection_radius_arg = DeclareLaunchArgument('min_detection_radius',default_value='0.60')
+    field_of_view_arg =        DeclareLaunchArgument('field_of_view',default_value='72.0')
+    detection_rate_arg =       DeclareLaunchArgument('detection_rate',default_value='100')
+
+    object_publisher_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            PathJoinSubstitution(object_publisher_dir,"launch/object_publisher.launch.py"),
+            launch_arguments = {
+                "max_detection_radius" : LaunchConfiguration("max_detection_radius"),
+                "min_detection_radius" : LaunchConfiguration("min_detection_radius"),
+                "field_of_view" : LaunchConfiguration("field_of_view"),
+                "detection_rate" : LaunchConfiguration("detection_rate")
+            }
+        )
+    )
+
+    object_publisher_launch_list = [
+        max_detection_radius_arg,
+        min_detection_radius_arg,
+        field_of_view_arg,
+        detection_rate_arg,
+        object_publisher_launch
+    ]1
+
+# Combine all nodes
+    system_launch = stonefish_launch_list + sitl_interface_launch_list + sitl_launch_list + mavros_launch_list + object_publisher_launch_list
+
+    return LaunchDescription(system_launch)
