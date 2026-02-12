@@ -16,6 +16,7 @@ object_publisher_dir = get_package_share_directory("object_publisher")
 mavros_dir = get_package_share_directory("mavros")
 xacro_path = os.path.join(stonefish_sim_dir, "data", "main.scn.xacro")
 scn_path   = os.path.join(stonefish_sim_dir, "data", "main.scn")
+
 subprocess.run(["xacro", xacro_path, "-o", scn_path], check=True) # Generate scn from xacro files
 
 def generate_launch_description():
@@ -57,7 +58,7 @@ def generate_launch_description():
         window_res_y_arg,
         quality_arg,
         include_stonefish_launch
-        ]
+    ]
 
 
 #Ardupilot SITL DDS launch, the parameters in the SITL class had to be overwritten for it to work. should be fixed in a future ardupilot release.
@@ -84,7 +85,6 @@ def generate_launch_description():
 
     sitl_interface_launch_list = [
         ip_address_arg,
-        include_sitl_interface_launch,
         delayed_sitl_interface_launch
     ]
 
@@ -162,10 +162,7 @@ def generate_launch_description():
         fcu_url_arg,
         gcs_url_arg,
         delayed_mavros_launch,
-
     ]
-
-
  
 ## Object publisher node:
     max_detection_radius_arg = DeclareLaunchArgument('max_detection_radius',default_value='20.0')
@@ -175,15 +172,16 @@ def generate_launch_description():
 
     object_publisher_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            PathJoinSubstitution(object_publisher_dir,"launch/object_publisher.launch.py"),
+                PathJoinSubstitution([object_publisher_dir,"launch/object_publisher.launch.py"])
+            ),
             launch_arguments = {
                 "max_detection_radius" : LaunchConfiguration("max_detection_radius"),
                 "min_detection_radius" : LaunchConfiguration("min_detection_radius"),
                 "field_of_view" : LaunchConfiguration("field_of_view"),
                 "detection_rate" : LaunchConfiguration("detection_rate")
-            }
-        )
+            }.items()
     )
+    
 
     object_publisher_launch_list = [
         max_detection_radius_arg,
@@ -191,9 +189,15 @@ def generate_launch_description():
         field_of_view_arg,
         detection_rate_arg,
         object_publisher_launch
-    ]1
+    ]
 
 # Combine all nodes
-    system_launch = stonefish_launch_list + sitl_interface_launch_list + sitl_launch_list + mavros_launch_list + object_publisher_launch_list
+    system_launch = (
+        stonefish_launch_list +
+        sitl_interface_launch_list +
+        sitl_launch_list +
+        mavros_launch_list +
+        object_publisher_launch_list
+    )
 
     return LaunchDescription(system_launch)
