@@ -37,10 +37,10 @@ public:
         this->declare_parameter<double>("field_of_view", 72.0);
         this->declare_parameter<int>("detection_rate", 100);
         
-        max_detection_radius_ = this->get_parameter("max_detection_radius").get_value<double>();
-        max_detection_radius_ = this->get_parameter("min_detection_radius").get_value<double>();
-        max_detection_radius_ = this->get_parameter("field_of_view").get_value<double>();
-        int detection_rate = this->get_parameter("detection_rate").get_value<int>();
+        max_detection_radius_ = this->get_parameter("max_detection_radius").as_double();
+        min_detection_radius_ = this->get_parameter("min_detection_radius").as_double();
+        field_of_view_deg_ = this->get_parameter("field_of_view").as_double();
+        int detection_rate = this->get_parameter("detection_rate").as_int();
         
         //Add buoys to the map ("Hardcoded", must be same in the simulator)
         add_buoys(10,5,0,"Red",0,10.0f,10);
@@ -97,13 +97,13 @@ public:
             if((distance < max_detection_radius_) && (distance > min_detection_radius_) && (std::abs(angle_diff)<= field_of_view_deg_*0.5*M_PI/180)){
                 //RCLCPP_DEBUG(this->get_logger(), "%s buoy detected at x_diff: %f y_diff:%f | buoy_pos: x: %f y %f | boat_pos: x: position_x: %f y: position_y: %f | dist: %f, angle: %f, buoy angle: %f",
                 //buoy.color.c_str(), position_x-buoy.pos_x, position_y-buoy.pos_y, buoy.pos_x, buoy.pos_y, position_x, position_y,distance,angle_diff*180/M_PI,buoy_angle*180/M_PI);
-                object_msgs::msg::Buoy buoy;
-                buoy.pos_x = std::cos(angle_diff)*distance;
-                buoy.pos_y = std::sin(angle_diff)*distance;
-                buoy.pos_z = distance;
+                object_msgs::msg::Buoy valid_buoy;
+                valid_buoy.pos_x = std::cos(angle_diff)*distance;
+                valid_buoy.pos_y = std::sin(angle_diff)*distance;
+                valid_buoy.pos_z = distance;
                 buoy_pub_msg.amount += 1;
-                buoy_pub_msg.buoys.push_back(buoy);
-                RCLCPP_INFO(this->get_logger(), "rel_x: %f, rel_y: %f, distance: %f",buoy.pos_x,buoy.pos_y,distance);
+                buoy_pub_msg.buoys.push_back(valid_buoy);
+                RCLCPP_INFO(this->get_logger(), "rel_x: %f, rel_y: %f, distance: %f",valid_buoy.pos_x,valid_buoy.pos_y,distance);
             }
         }
         if(buoy_pub_msg.amount >0){
