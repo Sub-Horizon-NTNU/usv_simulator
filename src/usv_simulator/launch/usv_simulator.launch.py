@@ -36,7 +36,6 @@ def generate_launch_description():
     window_res_y_arg = DeclareLaunchArgument("window_res_y", default_value="1080", description="Window height")
     quality_arg = DeclareLaunchArgument("rendering_quality", default_value="high")
 
-
     #include stonefish simulator launch
     include_stonefish_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(

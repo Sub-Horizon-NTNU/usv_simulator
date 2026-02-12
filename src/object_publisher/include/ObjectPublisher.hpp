@@ -82,6 +82,7 @@ public:
         
         current_heading_ = yaw;
     }
+
     void publish_buoys(){
         object_msgs::msg::Buoys buoy_pub_msg;
 
@@ -97,16 +98,17 @@ public:
             if((distance < max_detection_radius_) && (distance > min_detection_radius_) && (std::abs(angle_diff)<= field_of_view_deg_*0.5*M_PI/180)){
                 //RCLCPP_DEBUG(this->get_logger(), "%s buoy detected at x_diff: %f y_diff:%f | buoy_pos: x: %f y %f | boat_pos: x: position_x: %f y: position_y: %f | dist: %f, angle: %f, buoy angle: %f",
                 //buoy.color.c_str(), position_x-buoy.pos_x, position_y-buoy.pos_y, buoy.pos_x, buoy.pos_y, position_x, position_y,distance,angle_diff*180/M_PI,buoy_angle*180/M_PI);
+               // Relative position to simulate the real world detection system
                 object_msgs::msg::Buoy valid_buoy;
                 valid_buoy.pos_x = std::cos(angle_diff)*distance;
                 valid_buoy.pos_y = std::sin(angle_diff)*distance;
                 valid_buoy.pos_z = distance;
                 buoy_pub_msg.amount += 1;
                 buoy_pub_msg.buoys.push_back(valid_buoy);
-                RCLCPP_INFO(this->get_logger(), "rel_x: %f, rel_y: %f, distance: %f",valid_buoy.pos_x,valid_buoy.pos_y,distance);
+                //RCLCPP_DEBUG(this->get_logger(), "rel_x: %f, rel_y: %f, distance: %f",valid_buoy.pos_x,valid_buoy.pos_y,distance);
             }
         }
-        if(buoy_pub_msg.amount >0){
+        if(buoy_pub_msg.amount > 0){
             buoy_publisher_->publish(buoy_pub_msg);
         }
     }
