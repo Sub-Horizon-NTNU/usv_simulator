@@ -42,19 +42,20 @@ public:
         this->declare_parameter<int>("detection_rate", 100);
         this->declare_parameter<double>("boat_velocity", 1.0);
 
-
         max_detection_radius_ = this->get_parameter("max_detection_radius").as_double();
         min_detection_radius_ = this->get_parameter("min_detection_radius").as_double();
         field_of_view_deg_ = this->get_parameter("field_of_view").as_double();
         int detection_rate = this->get_parameter("detection_rate").as_int();
         boat_velocity_ = this->get_parameter("boat_velocity").as_double();
 
-
         buoys_ = std::make_unique<ObjectCreator>(max_detection_radius_,min_detection_radius_,field_of_view_deg_);
 
         boats_ = std::make_unique<ObjectCreator>(max_detection_radius_,min_detection_radius_,field_of_view_deg_);
-        boats_->add_object(20,20,0,"boat_1");
-        boats_->add_object(20,20,0,"boat_2");
+        boat_start_x = -10;
+        boat_start_y = -10;
+
+        boats_->add_object(boat_start_x,-10,0,"boat_1");
+        //boats_->add_object(-20,20,0,"boat_2");
         //Add buoys to the map ("Hardcoded", must be same in the simulator)
         buoys_->add_objects_on_line(10,5,0,"Red",0,10.0f,10);
         buoys_->add_objects_on_line(10,10,0,"Green",0,10.0f,10);
@@ -118,7 +119,7 @@ public:
             position_boat_1 += boat_velocity_ * 0.010;
             angle_boat_1 = 90*M_PI/180 ;
         }
-        boats_->set_object_position_y(0,-position_boat_1); // boat y position changes,  sign introduced to follow NED
+        boats_->set_object_position_y(0,boat_start_y+-position_boat_1); // boat y position changes,  sign introduced to follow NED
 
         sensor_msgs::msg::JointState boat_1_pos;
         boat_1_pos.name = {"boat1/piston", "boat1/rotation"};
@@ -147,7 +148,7 @@ public:
             buoy_publisher_->publish(buoy_pub_msg);
         }
 
-        if(boats_->try_get_viewed_objects_relative_position(boat_objects_,current_position_.pose.pose.position.x,current_position_.pose.pose.position.y, current_heading_))
+        if(boats_->try_get_viewed_objects_relative_position(boat_objects_, current_position_.pose.pose.position.x, current_position_.pose.pose.position.y, current_heading_))
         {
             object_msgs::msg::Boats boats_pub_msg;
             for(const auto &boat: boat_objects_){
@@ -183,8 +184,9 @@ private:
 
     double position_boat_1;
     double angle_boat_1;
-    double position_boat_2;
-    
+    double boat_start_x;
+    double boat_start_y;
+
     rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr boat1_position_publisher_;
     rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr boat2_position_publisher_;
 
