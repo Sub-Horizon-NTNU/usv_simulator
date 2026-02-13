@@ -181,7 +181,6 @@ def generate_launch_description():
                 "field_of_view" : LaunchConfiguration("field_of_view"),
                 "detection_rate" : LaunchConfiguration("detection_rate"),
                 "boat_velocity" : LaunchConfiguration("boat_velocity")
-
             }.items()
     )
     
