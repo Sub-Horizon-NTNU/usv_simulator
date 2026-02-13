@@ -11,6 +11,7 @@
 #include "object_msgs/msg/boats.hpp"
 
 #include <nav_msgs/msg/odometry.hpp>
+#include <sensor_msgs/msg/detail/joint_state__struct.hpp>
 #include <string>
 #include <vector>
 #include <cmath>
@@ -19,7 +20,10 @@
 
 #include <tf2/LinearMath/Quaternion.h>
 #include <chrono>
-#include <pugixml.hpp>
+#include <ObjectCreator.hpp>
+#include <sensor_msgs/msg/joint_state.hpp>
+
+//#include <pugixml.hpp>
 
 class ObjectPublisher : public rclcpp::Node
 {
@@ -36,15 +40,29 @@ public:
         this->declare_parameter<double>("min_detection_radius", 0.6);
         this->declare_parameter<double>("field_of_view", 72.0);
         this->declare_parameter<int>("detection_rate", 100);
-        
+        this->declare_parameter<double>("boat_velocity", 1.0);
+
+
         max_detection_radius_ = this->get_parameter("max_detection_radius").as_double();
         min_detection_radius_ = this->get_parameter("min_detection_radius").as_double();
         field_of_view_deg_ = this->get_parameter("field_of_view").as_double();
         int detection_rate = this->get_parameter("detection_rate").as_int();
-        
+        boat_velocity_ = this->get_parameter("boat_velocity").as_double();
+
+
+        buoys_ = std::make_unique<ObjectCreator>(max_detection_radius_,min_detection_radius_,field_of_view_deg_);
+
+        boats_ = std::make_unique<ObjectCreator>(max_detection_radius_,min_detection_radius_,field_of_view_deg_);
+        boats_->add_object(20,20,0,"boat_1");
+        boats_->add_object(20,20,0,"boat_2");
         //Add buoys to the map ("Hardcoded", must be same in the simulator)
-        add_buoys(10,5,0,"Red",0,10.0f,10);
-        add_buoys(10,10,0,"Green",0,10.0f,10);
+        buoys_->add_objects_on_line(10,5,0,"Red",0,10.0f,10);
+        buoys_->add_objects_on_line(10,10,0,"Green",0,10.0f,10);
+
+        
+        
+        boat1_position_publisher_ = this->create_publisher<sensor_msgs::msg::JointState>("/boat1/position", 10);
+        boat2_position_publisher_ = this->create_publisher<sensor_msgs::msg::JointState>("/boat2/position", 10);
 
         auto qos_geo_pose = rclcpp::QoS(rclcpp::KeepLast(1))
         .reliability(rclcpp::ReliabilityPolicy::BestEffort)
@@ -55,15 +73,16 @@ public:
         
         buoy_publisher_ = this->create_publisher<object_msgs::msg::Buoys>("/simulator/buoys",10);
         boat_publisher_ = this->create_publisher<object_msgs::msg::Boats>("/simulator/boats",10);
-       
+        
         buoy_timer_ = this->create_wall_timer(
             std::chrono::milliseconds(detection_rate),
-            std::bind(&ObjectPublisher::publish_buoys, this));
+            std::bind(&ObjectPublisher::publish_viewed_objects, this));
+        boat_position_update_timer_ = this->create_wall_timer(
+            std::chrono::milliseconds(10),
+            std::bind(&ObjectPublisher::update_boat_position, this));
         }
 
-    void parse_buoys(){
-        //pugi::xml_document doc;
-    }
+//Usv position cb
     void position_cb(nav_msgs::msg::Odometry position_msg){
         current_position_.pose.pose.position.x = position_msg.pose.pose.position.x;
         current_position_.pose.pose.position.y = position_msg.pose.pose.position.y;
@@ -79,78 +98,105 @@ public:
         tf2::Matrix3x3 m(q);
         double roll, pitch, yaw;
         m.getRPY(roll, pitch, yaw);
-        
         current_heading_ = yaw;
     }
 
-    void publish_buoys(){
-        object_msgs::msg::Buoys buoy_pub_msg;
-
-        double position_x =current_position_.pose.pose.position.x;
-        double position_y =current_position_.pose.pose.position.y;
-
-        // run throught all buoys and check angle and distance
-        for(const auto &buoy : buoys_.buoys){ 
-            double distance = std::hypot(buoy.pos_x-position_x,buoy.pos_y-position_y);
-            double buoy_angle = std::atan2(buoy.pos_y-position_y,buoy.pos_x-position_x);
-            double angle_diff = buoy_angle-current_heading_;
-            
-            if((distance < max_detection_radius_) && (distance > min_detection_radius_) && (std::abs(angle_diff)<= field_of_view_deg_*0.5*M_PI/180)){
-                //RCLCPP_DEBUG(this->get_logger(), "%s buoy detected at x_diff: %f y_diff:%f | buoy_pos: x: %f y %f | boat_pos: x: position_x: %f y: position_y: %f | dist: %f, angle: %f, buoy angle: %f",
-                //buoy.color.c_str(), position_x-buoy.pos_x, position_y-buoy.pos_y, buoy.pos_x, buoy.pos_y, position_x, position_y,distance,angle_diff*180/M_PI,buoy_angle*180/M_PI);
-               // Relative position to simulate the real world detection system
-                object_msgs::msg::Buoy valid_buoy;
-                valid_buoy.pos_x = std::cos(angle_diff)*distance;
-                valid_buoy.pos_y = std::sin(angle_diff)*distance;
-                valid_buoy.pos_z = distance;
-                buoy_pub_msg.amount += 1;
-                buoy_pub_msg.buoys.push_back(valid_buoy);
-                //RCLCPP_DEBUG(this->get_logger(), "rel_x: %f, rel_y: %f, distance: %f",valid_buoy.pos_x,valid_buoy.pos_y,distance);
-            }
+    void update_boat_position(){
+        // The following logic to move and rotate the boat is extremely hardcoded :<...
+        static bool direction_boat_1;
+        if (position_boat_1 >= 40.0){
+            direction_boat_1 = true;
         }
-        if(buoy_pub_msg.amount > 0){
+        if (position_boat_1 <= 0.0){
+            direction_boat_1 = false;
+        }
+
+        if(direction_boat_1){  //0.010 is deltatime (10ms),
+            position_boat_1 -= boat_velocity_*0.010;
+            angle_boat_1 = -90*M_PI/180;
+        } else {                            
+            position_boat_1 += boat_velocity_ * 0.010;
+            angle_boat_1 = 90*M_PI/180 ;
+        }
+        boats_->set_object_position_y(0,-position_boat_1); // boat y position changes,  sign introduced to follow NED
+
+        sensor_msgs::msg::JointState boat_1_pos;
+        boat_1_pos.name = {"boat1/piston", "boat1/rotation"};
+        boat_1_pos.position = {position_boat_1, angle_boat_1 };
+        boat1_position_publisher_->publish(boat_1_pos);
+
+        
+        //sensor_msgs::msg::JointState boat_2_pos;
+        //boat_2_pos.name = {"boat2/Joint1"};
+        //boat_2_pos.position = {position_boat_2};
+        //boat2_position_publisher_->publish(boat_2_pos);    
+    }
+
+    void publish_viewed_objects(){
+        if(buoys_->try_get_viewed_objects_relative_position(buoy_objects_,current_position_.pose.pose.position.x,current_position_.pose.pose.position.y, current_heading_))
+        {          object_msgs::msg::Buoys buoy_pub_msg;
+            for(const auto &buoy: buoy_objects_){
+                object_msgs::msg::Buoy buoy_msg;
+                buoy_msg.pos_x = buoy.x; // NED: 
+                buoy_msg.pos_y = buoy.y; // NED: 
+                buoy_msg.pos_z = buoy.z; // NED: Depth // 2D distance
+                buoy_msg.color = buoy.color;
+                buoy_pub_msg.amount +=1;
+                buoy_pub_msg.buoys.push_back(buoy_msg);
+            }
             buoy_publisher_->publish(buoy_pub_msg);
         }
-    }
-    //For creating multiple buoys in a line with a given spacing and angle (0 deg is North).
-    void add_buoys(double start_x, double start_y, double z, std::string color, double heading, double space, int amount){
-        double spacing_x = space*std::cos(heading);
-        double spacing_y = space*std::sin(heading);
-        for(int i = 0; i < amount; i++){
-            add_buoy(start_x+spacing_x*static_cast<double>(i), start_y+spacing_y*static_cast<double>(i), z, color);
+
+        if(boats_->try_get_viewed_objects_relative_position(boat_objects_,current_position_.pose.pose.position.x,current_position_.pose.pose.position.y, current_heading_))
+        {
+            object_msgs::msg::Boats boats_pub_msg;
+            for(const auto &boat: boat_objects_){
+                object_msgs::msg::Boat boat_msg;
+                boat_msg.pos_x = boat.x; // NED: 
+                boat_msg.pos_y = boat.y; // NED: 
+                boat_msg.pos_z = boat.z; // NED: Depth // 2D distance
+                boat_msg.color = boat.color;
+                boats_pub_msg.amount +=1;
+                boats_pub_msg.boats.push_back(boat_msg);
+            }
+            boat_publisher_->publish(boats_pub_msg);
         }
-    }
-
-    //create a single buoy and add it to the list of buoys.
-    void add_buoy(double x, double y, double z, std::string color){
-        object_msgs::msg::Buoy buoy;
-
-        buoy.pos_x = x; buoy.pos_y = y; buoy.pos_z = z;
-        buoy.color = color;
-
-        buoys_.buoys.push_back(buoy);
-        buoys_.amount +=1;
     }
 
 private:
-    double max_detection_radius_ = 20.0;
-    double min_detection_radius_ = 0.6;
-    double field_of_view_deg_=72.0;
+    double max_detection_radius_ = 20.0; //m
+    double min_detection_radius_ = 0.6; //m
+    double field_of_view_deg_=72.0; // deg
 
+    double boat_velocity_ = 1; // m/s
+
+    // Different objects to keep flexability with modification of fov and detection radius
+    std::unique_ptr<ObjectCreator> buoys_; 
+    std::vector<Object> buoy_objects_;
+    
+    std::unique_ptr<ObjectCreator> boats_; 
+    std::vector<Object> boat_objects_;
     
     nav_msgs::msg::Odometry start_position_;
     nav_msgs::msg::Odometry current_position_;
     double current_heading_{};
+
+    double position_boat_1;
+    double angle_boat_1;
+    double position_boat_2;
     
-    object_msgs::msg::Buoys buoys_;
-    object_msgs::msg::Boats boats_;
-    
+    rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr boat1_position_publisher_;
+    rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr boat2_position_publisher_;
+
     rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr position_subscriber_;
     rclcpp::Publisher<object_msgs::msg::Buoys>::SharedPtr buoy_publisher_;
     rclcpp::Publisher<object_msgs::msg::Boats>::SharedPtr boat_publisher_;
+
     rclcpp::TimerBase::SharedPtr buoy_timer_;
+    rclcpp::TimerBase::SharedPtr boat_timer_;
+    rclcpp::TimerBase::SharedPtr boat_position_update_timer_;
+    
     
 
-
-
 };
+

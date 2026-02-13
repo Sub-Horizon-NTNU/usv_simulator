@@ -168,6 +168,8 @@ def generate_launch_description():
     min_detection_radius_arg = DeclareLaunchArgument('min_detection_radius',default_value='0.60')
     field_of_view_arg =        DeclareLaunchArgument('field_of_view',default_value='72.0')
     detection_rate_arg =       DeclareLaunchArgument('detection_rate',default_value='100')
+    boat_velocity_arg =       DeclareLaunchArgument('boat_velocity',default_value='1.0')
+
 
     object_publisher_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -177,7 +179,9 @@ def generate_launch_description():
                 "max_detection_radius" : LaunchConfiguration("max_detection_radius"),
                 "min_detection_radius" : LaunchConfiguration("min_detection_radius"),
                 "field_of_view" : LaunchConfiguration("field_of_view"),
-                "detection_rate" : LaunchConfiguration("detection_rate")
+                "detection_rate" : LaunchConfiguration("detection_rate"),
+                "boat_velocity" : LaunchConfiguration("boat_velocity")
+
             }.items()
     )
     
@@ -187,6 +191,7 @@ def generate_launch_description():
         min_detection_radius_arg,
         field_of_view_arg,
         detection_rate_arg,
+        boat_velocity_arg,
         object_publisher_launch
     ]
 

@@ -1,17 +1,19 @@
 <?xml version="1.0"?>
 <scenario xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-<robot name="PassingBoat" fixed="true" self_collisions="false">
+<xacro:macro name="incoming_boat" params="name x y dir_vec_x dir_vec_y dir_vec_z heading">
+
+<robot name="${name}" fixed="true" self_collisions="false">
     <!--  x 29cm , y 49 cm  from mid-->
-        <world_transform xyz="-10 -10 0" rpy="0 0 0"/>
+        <world_transform xyz="${x} ${y} 0" rpy="0 0 0"/>
         <base_link name="Base" type="compound" physics="floating">
             <external_part name="boat_model" type="model" physics="floating" buoyant="true">
                 <physical>
-                    <mesh filename="../meshes/Buoy.obj" scale="4"/>
+                    <mesh filename="../meshes/Buoy.obj" scale="0.1"/>
                     <origin rpy="0 0 0" xyz="0 0 0"/>
                 </physical>
                 <visual>
-                    <mesh filename="../meshes/Buoy.obj" scale="4"/>
+                    <mesh filename="../meshes/Buoy.obj" scale="0.1"/>
                     <origin rpy="0 0 0" xyz="0.0 0 0"/>
                     <look name="Yellow"/>
                 </visual>
@@ -24,52 +26,70 @@
             </external_part>
         </base_link>
 
+<!-- Linear actuator-->
 
-
-        <joint name="Joint1" type="prismatic">
+        <joint name="piston" type="prismatic">
             <parent name="Base"/>
             <child name="Link1"/>
-            <origin xyz="0.0 -10.0 0.00" rpy="0.0 0.0 0"/>
-            <axis xyz="0.0 -1.0 0.0"/> <!-- Direction -1 negative y axis/west-->
+            <origin xyz="0.0 0.0 0.00" rpy="0.0 0.0 0"/>
+            <axis xyz="${dir_vec_x} ${dir_vec_y} ${dir_vec_z}"/> <!-- Direction -1 negative y axis/west-->
         </joint>
         <link name="Link1" type="model" physics="submerged" buoyant="false" collisions="false">
             <origin xyz="0.0 0 0" rpy="0.0 0.0 0"/>
             <material name="Neutral"/>
             <look name="Black"/>
             <physical>
-                <mesh filename="../meshes/SeaAngler.obj" scale="4"/>
-                <origin rpy="3.14159 0 -1.57" xyz="0 0 -0.1"/>
+                <mesh filename="../meshes/Buoy.obj" scale="0.1"/>
+                <origin rpy="3.14159 0 ${heading}" xyz="0 0 -0.1"/>
             </physical>
             <visual>
-                <mesh filename="../meshes/SeaAngler.obj" scale="4"/>
-                <origin rpy="3.14159 0 -1.57" xyz="0.0 0 -0.1"/>
+                <mesh filename="../meshes/Buoy.obj" scale="0.1"/>
+                <origin rpy="3.14159 0 ${heading}" xyz="0.0 0 -0.1"/>
                 <look name="Yellow"/>
             </visual>
         </link>
 
-        <actuator name="Piston" type="servo">
+        <actuator name="piston" type="servo">
             <controller position_gain="1.0" velocity_gain="1.0" max_torque="5400000.0" max_velocity="10.0"/>
-            <joint name="Joint1"/>
+            <joint name="piston"/>
             <initial position="0.0"/>
         </actuator>
 
-        <ros_subscriber servos="/linear_actuator"/>
-        <ros_publisher servos="/linear_actuator_states"/>
+<!-- Rotational joint-->
+        <joint name="rotation" type="revolute">
+            <parent name="Link1"/>
+            <child name="Link2"/>
+            <origin xyz="0.0 0.0 0.00" rpy="0.0 0.0 0"/>
+            <axis xyz="0 0 -1"/> <!-- Direction -1 negative y axis/west-->
+        </joint>
+        <link name="Link2" type="model" physics="submerged" buoyant="false" collisions="false">
+            <origin xyz="0.0 0 0" rpy="0.0 0.0 0"/>
+            <material name="Neutral"/>
+            <look name="Black"/>
+            <physical>
+                <mesh filename="../meshes/SeaAngler.obj" scale="4"/>
+                <origin rpy="3.14159 0 0" xyz="0 0 0"/>
+            </physical>
+            <visual>
+                <mesh filename="../meshes/SeaAngler.obj" scale="4"/>
+                <origin rpy="3.14159 0 0" xyz="0.0 0 0"/>
+                <look name="Yellow"/>
+            </visual>
+        </link>
 
+        <actuator name="rotation" type="servo">
+            <controller position_gain="1.00" velocity_gain="1.0" max_torque="540000.0" max_velocity="10.0"/>
+            <joint name="rotation"/>
+            <initial position="0.0"/>
+        </actuator>
 
-    <!--ROS2 Integration
-        <sensor name="Odometry" rate="100.0" type="odometry">
-            <noise position="0.000001" velocity="0.0000001" angle="0.0000001" angular_velocity="0.000005"/> 
-            <history samples="10"/>
-            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
-            <link name="Base"/>
-            <ros_publisher topic="/boat/odometry"/>
-        </sensor>
-        -->
-    
-   
+        <ros_subscriber servos="/${name}/position"/>
+        <ros_publisher servos="/${name}/position_states"/>
 
     </robot>
+</xacro:macro>
 
+
+<xacro:incoming_boat name="boat1" x="-10" y="-10" dir_vec_x="0" dir_vec_y="-1" dir_vec_z="0" heading="-1.57"/>
 
 </scenario>
