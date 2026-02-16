@@ -46,6 +46,7 @@ bool try_get_viewed_objects_relative_position(std::vector<Object> &objects, cons
 
                 detected_objects.push_back(detected_object);
             }
+            
         }
         if(detected_objects.size()>0){
             objects = detected_objects;

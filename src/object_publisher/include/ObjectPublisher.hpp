@@ -42,6 +42,7 @@ public:
         this->declare_parameter<int>("detection_rate", 100);
         this->declare_parameter<double>("boat_velocity", 1.0);
 
+        
         max_detection_radius_ = this->get_parameter("max_detection_radius").as_double();
         min_detection_radius_ = this->get_parameter("min_detection_radius").as_double();
         field_of_view_deg_ = this->get_parameter("field_of_view").as_double();
@@ -51,16 +52,39 @@ public:
         buoys_ = std::make_unique<ObjectCreator>(max_detection_radius_,min_detection_radius_,field_of_view_deg_);
 
         boats_ = std::make_unique<ObjectCreator>(max_detection_radius_,min_detection_radius_,field_of_view_deg_);
-        boat_start_x = -10;
-        boat_start_y = -10;
+        
 
-        boats_->add_object(boat_start_x,-10,0,"boat_1");
-        //boats_->add_object(-20,20,0,"boat_2");
+    // Obstacle challenge.
         //Add buoys to the map ("Hardcoded", must be same in the simulator)
         buoys_->add_objects_on_line(10,5,0,"Red",0,10.0f,10);
         buoys_->add_objects_on_line(10,10,0,"Green",0,10.0f,10);
+        buoys_->add_object(15, 20, 0.0, "Yellow");
 
+    //Collision avoidance:
+        buoys_->add_object(1.5, -20, 0.0, "Red");
+        buoys_->add_object(-1.5, -20, 0.0, "Green");
+        buoys_->add_object(35, 0.2, 0.0, "Yellow");
+        buoys_->add_object(55, -0.2, 0.0, "Yellow");
         
+        boat1_start_x = 20;
+        boat1_start_y = -35;
+        boats_->add_object(boat1_start_x,boat1_start_y,0,"boat_1");
+
+        buoys_->add_object(1.5, -50, 0.0, "Red");
+        buoys_->add_object(-1.5,-50, 0.0, "Green");
+        
+        boat2_start_x = 20;
+        boat2_start_y = -65;
+        boats_->add_object(boat2_start_x,boat2_start_y,0,"boat_2");
+
+        buoys_->add_object(1.5, -80, 0.0, "Red");
+        buoys_->add_object(-1.5, -80, 0.0, "Green");
+    //Docking challenge
+
+        buoys_->add_object(1.5, 20, 0.0, "Red");
+        buoys_->add_object(-1.5, 20, 0.0, "Green");
+       
+
         
         boat1_position_publisher_ = this->create_publisher<sensor_msgs::msg::JointState>("/boat1/position", 10);
         boat2_position_publisher_ = this->create_publisher<sensor_msgs::msg::JointState>("/boat2/position", 10);
@@ -103,7 +127,7 @@ public:
     }
 
     void update_boat_position(){
-        // The following logic to move and rotate the boat is extremely hardcoded :<...
+        // The following logic to move and rotate the boat is extremely bad :<...
         static bool direction_boat_1;
         if (position_boat_1 >= 40.0){
             direction_boat_1 = true;
@@ -114,23 +138,43 @@ public:
 
         if(direction_boat_1){  //0.010 is deltatime (10ms),
             position_boat_1 -= boat_velocity_*0.010;
-            angle_boat_1 = -90*M_PI/180;
+            angle_boat_1 = 0;
         } else {                            
             position_boat_1 += boat_velocity_ * 0.010;
-            angle_boat_1 = 90*M_PI/180 ;
+            angle_boat_1 = -180*M_PI/180 ;
         }
-        boats_->set_object_position_y(0,boat_start_y+-position_boat_1); // boat y position changes,  sign introduced to follow NED
+        boats_->set_object_position_y(0,boat1_start_y+-position_boat_1); // boat y position changes,  sign introduced to follow NED
 
         sensor_msgs::msg::JointState boat_1_pos;
         boat_1_pos.name = {"boat1/piston", "boat1/rotation"};
         boat_1_pos.position = {position_boat_1, angle_boat_1 };
         boat1_position_publisher_->publish(boat_1_pos);
 
+
+         static bool direction_boat_2;
+        if (position_boat_2 >= 40.0){
+            direction_boat_2 = true;
+        }
+        if (position_boat_2 <= 0.0){
+            direction_boat_2 = false;
+        }
+
+        if(direction_boat_2){  //0.010 is deltatime (10ms), //twitce the speed of the first one
+            position_boat_2 -= boat_velocity_*0.010;
+            angle_boat_2 = 0;
+        } else {                            
+            position_boat_2 += boat_velocity_*2* 0.010;
+            angle_boat_2 = -180*M_PI/180 ;
+        }
+        boats_->set_object_position_y(1,boat2_start_y+-position_boat_2); // boat y position changes,  sign introduced to follow NED
+
+        sensor_msgs::msg::JointState boat_2_pos;
+        boat_2_pos.name = {"boat2/piston", "boat2/rotation"};
+        boat_2_pos.position = {position_boat_2, angle_boat_2 };
+        boat2_position_publisher_->publish(boat_2_pos);
+
         
-        //sensor_msgs::msg::JointState boat_2_pos;
-        //boat_2_pos.name = {"boat2/Joint1"};
-        //boat_2_pos.position = {position_boat_2};
-        //boat2_position_publisher_->publish(boat_2_pos);    
+        
     }
 
     void publish_viewed_objects(){
@@ -163,8 +207,8 @@ public:
             boat_publisher_->publish(boats_pub_msg);
         }
     }
-
 private:
+
     double max_detection_radius_ = 20.0; //m
     double min_detection_radius_ = 0.6; //m
     double field_of_view_deg_=72.0; // deg
@@ -184,8 +228,13 @@ private:
 
     double position_boat_1;
     double angle_boat_1;
-    double boat_start_x;
-    double boat_start_y;
+    double boat1_start_x;
+    double boat1_start_y;
+
+    double position_boat_2;
+    double angle_boat_2;
+    double boat2_start_x;
+    double boat2_start_y;
 
     rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr boat1_position_publisher_;
     rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr boat2_position_publisher_;
