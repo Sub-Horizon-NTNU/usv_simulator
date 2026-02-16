@@ -6,6 +6,9 @@
     <xacro:include filename="drones/selene.scn"/>
     <xacro:include filename="challenges/obstacle_challenge.xacro"/>
     <xacro:include filename="challenges/docking_challenge.xacro"/>
-    <xacro:include filename="challenges/docking_challenge.xacro"/>
     <xacro:include filename="challenges/collision_avoidance.xacro"/>
+    <xacro:include filename="challenges/speed_challenge.xacro"/>
 </scenario>
+
+
+

@@ -90,6 +90,23 @@
 </xacro:macro>
 
 
-<xacro:incoming_boat name="boat1" x="-10" y="-10" dir_vec_x="0" dir_vec_y="-1" dir_vec_z="0" heading="-1.57"/>
+
+
+<!-- Red buoys on the starboard on this challenge-->
+<xacro:buoy name="R1" color="Red" x="1.5" y="-20"/>
+<xacro:buoy name="G1" color="Green" x="-1.5" y="-20"/>
+<!-- Boat inncoming 1-->
+
+<xacro:incoming_boat name="boat1" x="20" y="-35" dir_vec_x="-1" dir_vec_y="0" dir_vec_z="0" heading="0.0"/>
+
+
+<xacro:buoy name="R1" color="Red" x="1.5" y="-50"/>
+<xacro:buoy name="G1" color="Green" x="-1.5" y="-50"/>
+
+<xacro:incoming_boat name="boat2" x="20" y="-65" dir_vec_x="-1" dir_vec_y="0" dir_vec_z="0" heading="0"/>
+
+
+<xacro:buoy name="R1" color="Red" x="1.5" y="-80"/>
+<xacro:buoy name="G1" color="Green" x="-1.5" y="-80"/>
 
 </scenario>

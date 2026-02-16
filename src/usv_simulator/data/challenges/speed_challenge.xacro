@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<scenario xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+
+<!-- Speed challange-->
+<xacro:buoy name="G1" color="Green" x="-10.0" y="-1.5"/>
+<xacro:buoy name="R2" color="Red" x="-10.0" y="1.5"/>
+<xacro:buoy name="Y3" color="Yellow" x="-40.0" y="0"/>
+
+</scenario>
+
+
+
