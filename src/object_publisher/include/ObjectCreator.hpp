@@ -77,6 +77,11 @@ bool try_get_viewed_objects_relative_position(std::vector<Object> &objects, cons
             objects_[index].y = y;
         }
     }
+    void set_object_position_x(int index, double x){
+        if(objects_.size()>=index){
+            objects_[index].x = x;
+        }
+    }
 
     //create a single buoy and add it to the list of objetcs.
     void add_object(double x, double y, double z, std::string color){
