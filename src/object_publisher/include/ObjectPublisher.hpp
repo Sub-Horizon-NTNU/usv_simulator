@@ -143,7 +143,7 @@ public:
             position_boat_1 += boat_velocity_ * 0.010;
             angle_boat_1 = -180*M_PI/180 ;
         }
-        boats_->set_object_position_y(0,boat1_start_y+-position_boat_1); // boat y position changes,  sign introduced to follow NED
+        boats_->set_object_position_x(0,boat1_start_x-position_boat_1); // boat y position changes,  sign introduced to follow NED
 
         sensor_msgs::msg::JointState boat_1_pos;
         boat_1_pos.name = {"boat1/piston", "boat1/rotation"};
@@ -166,7 +166,7 @@ public:
             position_boat_2 += boat_velocity_*2* 0.010;
             angle_boat_2 = -180*M_PI/180 ;
         }
-        boats_->set_object_position_y(1,boat2_start_y+-position_boat_2); // boat y position changes,  sign introduced to follow NED
+        boats_->set_object_position_x(1,boat2_start_x-position_boat_2); // boat y position changes,  sign introduced to follow NED
 
         sensor_msgs::msg::JointState boat_2_pos;
         boat_2_pos.name = {"boat2/piston", "boat2/rotation"};
