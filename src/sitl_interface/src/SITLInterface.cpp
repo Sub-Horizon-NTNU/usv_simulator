@@ -27,7 +27,6 @@
     }
 
     void SITLInterface::imu_callback(const sensor_msgs::msg::Imu::SharedPtr msg){
-       
         auto q_msg = msg->orientation;
         tf2::Quaternion quat(q_msg.x, q_msg.y, q_msg.z, q_msg.w);
         tf2::Matrix3x3 m(quat);
@@ -51,14 +50,23 @@
 
     void SITLInterface::odo_callback(const nav_msgs::msg::Odometry::SharedPtr msg){
 
+        tf2::Quaternion q(
+            msg->pose.pose.orientation.x,
+            msg->pose.pose.orientation.y,
+            msg->pose.pose.orientation.z,
+            msg->pose.pose.orientation.w
+        );
+        tf2::Vector3 body_velocity(msg->twist.twist.linear.x,msg->twist.twist.linear.y,msg->twist.twist.linear.z);
+        tf2::Vector3 world_velocity = tf2::quatRotate(q, body_velocity);
+
         //simulator_data_.timestamp = (rclcpp::Time(msg->header.stamp).nanoseconds()) / 1.0e9;
-        simulator_data_.position[0] = msg->pose.pose.position.x ;
+        simulator_data_.position[0] = msg->pose.pose.position.x;
         simulator_data_.position[1] = msg->pose.pose.position.y;
         simulator_data_.position[2] = msg->pose.pose.position.z;
 
-        simulator_data_.velocity[0] = msg->twist.twist.linear.x;
-        simulator_data_.velocity[1] = msg->twist.twist.linear.y;
-        simulator_data_.velocity[2] = msg->twist.twist.linear.z;
+        simulator_data_.velocity[0] = world_velocity.x();
+        simulator_data_.velocity[1] = world_velocity.y();
+        simulator_data_.velocity[2] = world_velocity.z();
 
     }
 
