@@ -71,17 +71,38 @@
                 <!--<cg xyz="0 0 0" rpy="0 0 0"/>-->
                 <compound_transform xyz="0.0 0.0 0.096" rpy="3.14159 0 0"/>
             </external_part>
-
             
-
+            <external_part name="electronics_box" type="model" physics="surface">
+                <physical>
+                    <mesh filename="../meshes/1x1x1mm_cube.obj" scale="1"/>
+                    <origin rpy="0 0 0" xyz="0.0 0 0.35"/>
+                </physical>
+                <visual>
+                    <mesh filename="../meshes/electronics_box.obj" scale="1"/>
+                    <origin rpy="0 0 0" xyz="0.0 0 0.35"/>
+                </visual>
+                <material name="PolyCarbonatePlastic"/>
+                <look name="Gray"/>
+                <mass value="0.1"/>
+                <!--<cg xyz="0 0 0" rpy="0 0 0"/>-->
+                <compound_transform xyz="0.0 0.0 0.0" rpy="3.14159 0 0"/>
+            </external_part>
             
-
-
-
-
-            
-            
-
+            <external_part name="electronics_box" type="model" physics="surface">
+                <physical>
+                    <mesh filename="../meshes/1x1x1mm_cube.obj" scale="1"/>
+                    <origin rpy="0 0 0" xyz="0.0 0 0.0"/>
+                </physical>
+                <visual>
+                    <mesh filename="../meshes/light_column.obj" scale="1"/>
+                    <origin rpy="0 0 0" xyz="0.0 0 0.0"/>
+                </visual>
+                <material name="PolyCarbonatePlastic"/>
+                <look name="Gray"/>
+                <mass value="0.1"/>
+                <!--<cg xyz="0 0 0" rpy="0 0 0"/>-->
+                <compound_transform xyz="0.0 0.0 0.096" rpy="3.14159 0 0"/>
+            </external_part>
         </base_link>
 
 
