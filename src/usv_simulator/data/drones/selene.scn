@@ -63,7 +63,7 @@
                 </physical>
                 <visual>
                     <mesh filename="../meshes/Aluminium.obj" scale="1"/>
-                    <origin rpy="0 0 0" xyz="0.0 0 0"/>
+                    <origin rpy="0 0 0" xyz="-0.005 0 0"/>
                 </visual>
                 <material name="PolyCarbonatePlastic"/>
                 <look name="Gray"/>
@@ -75,36 +75,104 @@
             <external_part name="electronics_box" type="model" physics="surface">
                 <physical>
                     <mesh filename="../meshes/1x1x1mm_cube.obj" scale="1"/>
-                    <origin rpy="0 0 0" xyz="0.0 0 0.35"/>
+                    <origin rpy="0 0 0" xyz="-0.06 -0.01 0.31"/>
                 </physical>
                 <visual>
                     <mesh filename="../meshes/electronics_box.obj" scale="1"/>
-                    <origin rpy="0 0 0" xyz="0.0 0 0.35"/>
+                    <origin rpy="0 0 0" xyz="-0.06 -0.01 0.31"/>
                 </visual>
                 <material name="PolyCarbonatePlastic"/>
-                <look name="Gray"/>
+                <look name="White"/>
                 <mass value="0.1"/>
                 <!--<cg xyz="0 0 0" rpy="0 0 0"/>-->
                 <compound_transform xyz="0.0 0.0 0.0" rpy="3.14159 0 0"/>
             </external_part>
             
-            <external_part name="electronics_box" type="model" physics="surface">
+            <external_part name="light_column" type="model" physics="surface">
+                <physical>
+                    <mesh filename="../meshes/1x1x1mm_cube.obj" scale="1"/>
+                    <origin rpy="0 0 0" xyz="0.00 0 0.0"/>
+                </physical>
+                <visual>
+                    <mesh filename="../meshes/light_column.obj" scale="1"/>
+                    <origin rpy="0 0 0" xyz="0.00 0 0.0"/>
+                </visual>
+                <material name="PolyCarbonatePlastic"/>
+                <look name="White"/>
+                <mass value="0.1"/>
+                <!--<cg xyz="0 0 0" rpy="0 0 0"/>-->
+                <compound_transform xyz="0.0 0.0 0.096" rpy="3.14159 0 0"/>
+            </external_part>
+
+            <external_part name="wifi_antenna" type="model" physics="surface">
                 <physical>
                     <mesh filename="../meshes/1x1x1mm_cube.obj" scale="1"/>
                     <origin rpy="0 0 0" xyz="0.0 0 0.0"/>
                 </physical>
                 <visual>
-                    <mesh filename="../meshes/light_column.obj" scale="1"/>
+                    <mesh filename="../meshes/wifi_antenna.obj" scale="1"/>
                     <origin rpy="0 0 0" xyz="0.0 0 0.0"/>
                 </visual>
                 <material name="PolyCarbonatePlastic"/>
-                <look name="Gray"/>
+                <look name="Black"/>
                 <mass value="0.1"/>
                 <!--<cg xyz="0 0 0" rpy="0 0 0"/>-->
                 <compound_transform xyz="0.0 0.0 0.096" rpy="3.14159 0 0"/>
             </external_part>
-        </base_link>
 
+            <external_part name="zed_camera" type="model" physics="surface">
+                <physical>
+                    <mesh filename="../meshes/1x1x1mm_cube.obj" scale="1"/>
+                    <origin rpy="0 0 0" xyz="0.0 0 0.2"/>
+                </physical>
+                <visual>
+                    <mesh filename="../meshes/camera.obj" scale="1"/>
+                    <origin rpy="0 0 0" xyz="0.00 0 0.0"/>
+                </visual>
+                <material name="PolyCarbonatePlastic"/>
+                <look name="Black"/>
+                <mass value="0.1"/>
+                <!--<cg xyz="0 0 0" rpy="0 0 0"/>-->
+                <compound_transform xyz="0.0 0.0 0.096" rpy="3.14159 0 0"/>
+            </external_part>
+
+             <external_part name="camera_column" type="model" physics="surface">
+                <physical>
+                    <mesh filename="../meshes/1x1x1mm_cube.obj" scale="1"/>
+                    <origin rpy="0 0 0" xyz="0.0 0 0.0"/>
+                </physical>
+                <visual>
+                    <mesh filename="../meshes/camera_column.obj" scale="1"/>
+                    <origin rpy="0 0 0" xyz="0.0 0 0.0"/>
+                </visual>
+                <material name="PolyCarbonatePlastic"/>
+                <look name="Black"/>
+                <mass value="0.1"/>
+                <!--<cg xyz="0 0 0" rpy="0 0 0"/>-->
+                <compound_transform xyz="0.0 0.0 0.096" rpy="3.14159 0 0"/>
+            </external_part>
+
+           
+
+        </base_link>
+        <light name="Omni">
+            <specs radius="0.03" illuminance="10000.0"/>
+            <color rgb="1.0 0.0 0.0"/>
+            <origin xyz="-0.157 0.039 -0.49" rpy="0.0 0.0 0.0"/>
+            <link name="Base"/>
+        </light>
+        <light name="Omni">
+            <specs radius="0.03" illuminance="10000.0"/>
+            <color rgb="1.0 0.361 0.0"/>
+            <origin xyz="-0.157 0.039 -0.45" rpy="0.0 0.0 0.0"/>
+            <link name="Base"/>
+        </light>
+        <light name="Omni">
+            <specs radius="0.03" illuminance="10000.0"/>
+            <color rgb="0.0 1.0 0.0"/>
+            <origin xyz="-0.157 0.039 -0.41" rpy="0.0 0.0 0.0"/>
+            <link name="Base"/>
+        </light>
 
    
         <joint name="SensorJoint" type="fixed">
