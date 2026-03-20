@@ -41,8 +41,9 @@ Stonefish is the framework used for creating the simulation, it provides a physi
 
 ##### Dependencies
 * GCC 13
+* ASIO
 ```console 
-sudo apt install libsdl2-dev libglm-dev libasio-dev 
+sudo apt install libsdl2-dev libglm-dev libasio-dev g++-13
 ```
 
 ```console
@@ -80,6 +81,7 @@ cd ../../
 ### Micro XRCEDDS GEN
 Start by installing the dependencies
 ```console
+sudo apt install python3-vcstool
  vcs import --recursive --input  https://raw.githubusercontent.com/ArduPilot/ardupilot/master/Tools/ros2/ros2.repos src
 
 sudo rosdep init 
