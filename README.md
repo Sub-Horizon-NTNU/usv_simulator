@@ -119,7 +119,7 @@ sudo apt install ros-humble-mavros
 ```
 Then install GeographicLib datasets by running the install_geographiclib_datasets.sh script:
 ```console
-./opt/ros/humble/lib/mavros/install_geographiclib_datasets.sh
+sudo /opt/ros/humble/lib/mavros/install_geographiclib_datasets.sh
 ```
 ## Build
 After all the tiresome steps are completed it is time to build:
