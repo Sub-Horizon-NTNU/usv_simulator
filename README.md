@@ -1,9 +1,10 @@
 # USV SIMULATOR (README TO BE UPDATED)
 The main goal of this project is to be able to simulate Sub-Horizon/Selene in a environment similar to Autodrone. The Autodrone competition consists of several challenges: 
-![alt text](readme_images/obstacle_channel.png)
-![alt text](readme_images/collision_avoidance.png)
-![alt text](readme_images/visual_docking.png)
-![alt text](readme_images/speed_gate.png)
+| Obstacle Channel | Collision Avoidance |
+| :---: | :---: |
+| ![alt text](readme_images/obstacle_channel.png) | ![alt text](readme_images/collision_avoidance.png) |
+| **Visual Docking** | **Speed Gate** |
+| ![alt text](readme_images/visual_docking.png) | ![alt text](readme_images/speed_gate.png) |
 The simulator environment provides a recreation of all of these scenarios.
 
 ## Dependencies
