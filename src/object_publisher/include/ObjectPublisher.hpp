@@ -41,7 +41,6 @@ public:
         this->declare_parameter<double>("field_of_view", 72.0);
         this->declare_parameter<int>("detection_rate", 100);
         this->declare_parameter<double>("boat_velocity", 1.0);
-
         
         max_detection_radius_ = this->get_parameter("max_detection_radius").as_double();
         min_detection_radius_ = this->get_parameter("min_detection_radius").as_double();
@@ -53,7 +52,6 @@ public:
 
         boats_ = std::make_unique<ObjectCreator>(max_detection_radius_,min_detection_radius_,field_of_view_deg_);
         
-
     // Obstacle challenge.
         //Add buoys to the map ("Hardcoded", must be same in the simulator)
         buoys_->add_objects_on_line(10,5,0,"Red",0,10.0f,10);
@@ -96,8 +94,8 @@ public:
         position_subscriber_= this->create_subscription<nav_msgs::msg::Odometry>(
             "/sensors/odometry", qos_geo_pose, std::bind(&ObjectPublisher::position_cb, this, std::placeholders::_1));
         
-        buoy_publisher_ = this->create_publisher<object_msgs::msg::Buoys>("/simulator/buoys",10);
-        boat_publisher_ = this->create_publisher<object_msgs::msg::Boats>("/simulator/boats",10);
+        buoy_publisher_ = this->create_publisher<object_msgs::msg::Buoy>("selene/object_detector/buoy",10);
+        boat_publisher_ = this->create_publisher<object_msgs::msg::Boat>("selene/object_detector/boat",10);
         
         buoy_timer_ = this->create_wall_timer(
             std::chrono::milliseconds(detection_rate),
@@ -179,32 +177,27 @@ public:
 
     void publish_viewed_objects(){
         if(buoys_->try_get_viewed_objects_relative_position(buoy_objects_,current_position_.pose.pose.position.x,current_position_.pose.pose.position.y, current_heading_))
-        {          object_msgs::msg::Buoys buoy_pub_msg;
+        {
             for(const auto &buoy: buoy_objects_){
                 object_msgs::msg::Buoy buoy_msg;
                 buoy_msg.pos_x = buoy.x; // NED: 
                 buoy_msg.pos_y = buoy.y; // NED: 
                 buoy_msg.pos_z = buoy.z; // NED: Depth // 2D distance
                 buoy_msg.color = buoy.color;
-                buoy_pub_msg.amount +=1;
-                buoy_pub_msg.buoys.push_back(buoy_msg);
+                buoy_publisher_->publish(buoy_msg);
             }
-            buoy_publisher_->publish(buoy_pub_msg);
         }
 
         if(boats_->try_get_viewed_objects_relative_position(boat_objects_, current_position_.pose.pose.position.x, current_position_.pose.pose.position.y, current_heading_))
         {
-            object_msgs::msg::Boats boats_pub_msg;
             for(const auto &boat: boat_objects_){
                 object_msgs::msg::Boat boat_msg;
                 boat_msg.pos_x = boat.x; // NED: 
                 boat_msg.pos_y = boat.y; // NED: 
                 boat_msg.pos_z = boat.z; // NED: Depth // 2D distance
                 boat_msg.color = boat.color;
-                boats_pub_msg.amount +=1;
-                boats_pub_msg.boats.push_back(boat_msg);
+                boat_publisher_->publish(boat_msg);
             }
-            boat_publisher_->publish(boats_pub_msg);
         }
     }
 private:
@@ -240,8 +233,8 @@ private:
     rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr boat2_position_publisher_;
 
     rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr position_subscriber_;
-    rclcpp::Publisher<object_msgs::msg::Buoys>::SharedPtr buoy_publisher_;
-    rclcpp::Publisher<object_msgs::msg::Boats>::SharedPtr boat_publisher_;
+    rclcpp::Publisher<object_msgs::msg::Buoy>::SharedPtr buoy_publisher_;
+    rclcpp::Publisher<object_msgs::msg::Boat>::SharedPtr boat_publisher_;
 
     rclcpp::TimerBase::SharedPtr buoy_timer_;
     rclcpp::TimerBase::SharedPtr boat_timer_;
