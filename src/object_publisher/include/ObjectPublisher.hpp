@@ -179,9 +179,9 @@ public:
         {
             for(const auto &buoy: buoy_objects_){
                 object_msgs::msg::Buoy buoy_msg;
-                buoy_msg.pos_x = buoy.x; // NED: 
-                buoy_msg.pos_y = buoy.y; // NED: 
-                buoy_msg.pos_z = buoy.z; // NED: Depth // 2D distance
+                buoy_msg.x = buoy.x; // NED: 
+                buoy_msg.y = buoy.y; // NED: 
+                buoy_msg.z = buoy.z; // NED: Depth // 2D distance
                 buoy_msg.color = buoy.color;
                 buoy_publisher_->publish(buoy_msg);
             }

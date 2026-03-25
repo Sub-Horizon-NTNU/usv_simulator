@@ -1,0 +1,3 @@
+[submodule "src/object_msgs"]
+	path = src/object_msgs
+	url = git@github.com:Sub-Horizon-NTNU/object_msgs.git
