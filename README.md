@@ -1,5 +1,5 @@
-# USV SIMULATOR (README TO BE UPDATED)
-The main goal of this project is to be able to simulate Sub-Horizon/Selene in a environment similar to Autodrone. 
+# USV SIMULATOR
+The main goal of this project is to be able to simulate Sub-Horizon/Selene in a environment similar to Autodrone. The project has been developed for our bachelor thesis where we will attempt to solve the challenges presented in the Autodrone competition.
 ![Image of USV](readme_images/sim_photo_usv.png)
 
 The Autodrone competition consists of several challenges: 
