@@ -134,6 +134,6 @@ source install/setup.bash
 ros2 launch usv_simulator usv_simulator.launch.py gcs_url:=udp://@<your_gcs_ip>:<your_gcs_port>
 ```
 You can then open a instance of QGroundControl or any other mavlink compatible mission planner.
-## More updates to the project will defintly come. 
+## More updates to the project will definitely come. 
 * Create more launch parameters such that the simulator can run without mavros and micro ros agent.
 * Decouple simulator scenario such that more tasks/environments
