@@ -54,15 +54,14 @@ public:
         
     // Obstacle challenge.
         //Add buoys to the map ("Hardcoded", must be same in the simulator)
-        buoys_->add_objects_on_line(10,5,0,"Red",0,10.0f,10);
-        buoys_->add_objects_on_line(10,10,0,"Green",0,10.0f,10);
-        buoys_->add_object(15, 20, 0.0, "Yellow");
+        buoys_->add_objects_on_line(10,-1.5,0,"Red",0,10.0f,10);
+        buoys_->add_objects_on_line(10,1.5,0,"Green",0,10.0f,10);
+        buoys_->add_object(35, 0.2, 0.0, "Yellow");
+        buoys_->add_object(55, -0.2, 0.0, "Yellow");
 
     //Collision avoidance:
         buoys_->add_object(1.5, -20, 0.0, "Red");
         buoys_->add_object(-1.5, -20, 0.0, "Green");
-        buoys_->add_object(35, 0.2, 0.0, "Yellow");
-        buoys_->add_object(55, -0.2, 0.0, "Yellow");
         
         boat1_start_x = 20;
         boat1_start_y = -35;
