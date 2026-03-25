@@ -1,15 +1,20 @@
 # USV SIMULATOR (README TO BE UPDATED)
-The main goal of this project is to be able to simulate Sub-Horizon/Selene in a environment similar to Autodrone. The Autodrone competition consists of several challenges: 
+The main goal of this project is to be able to simulate Sub-Horizon/Selene in a environment similar to Autodrone. 
+![Image of USV](readme_images/sim_photo_usv.png)
+
+The Autodrone competition consists of several challenges: 
 | Obstacle Channel | Collision Avoidance |
 | :---: | :---: |
 | ![alt text](readme_images/obstacle_channel.png) | ![alt text](readme_images/collision_avoidance.png) |
 | **Visual Docking** | **Speed Gate** |
 | ![alt text](readme_images/visual_docking.png) | ![alt text](readme_images/speed_gate.png) |
+
 The simulator environment provides a recreation of all of these scenarios.
 
 ## Dependencies
 
 ### ROS2 Humble 
+The project is mostly developed and tested for the ROS2 Humble.
 #### Distrobox
  If you're using a version of Ubuntu that is not equal to 22.04, we highly recommend using Distrobox. To setup distobox just use the following commands:
  install : 
@@ -31,7 +36,7 @@ After the distrobox is created you can enter the container by using the followin
 distrobox enter ubuntu_2204
 ```
 
-#### ROS2 Humble
+#### ROS2 Humble installation
 Follow the guide at: [ROS2 Humble Installation](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html)
 
 
@@ -41,12 +46,11 @@ Stonefish is the framework used for creating the simulation, it provides a physi
 #### Installation
 
 ##### Dependencies
-* GCC 13
-* ASIO
 ```console 
 sudo apt install libsdl2-dev libglm-dev libasio-dev g++-13 
 ```
 
+Stonefish could be downloaded by running the following commands, feel free to delete the folder after it is downloaded.
 ```console
 git clone "https://github.com/patrykcieslak/stonefish.git"
 
@@ -67,16 +71,6 @@ Clone ardupilot into src/
 git clone --recurse-submodules git@github.com:Sub-Horizon-NTNU/ardupilot_selene.git
 
 cd ardupilot_selene/ && ./Tools/environment_install/install-prereqs-ubuntu.sh -y 
-```
-
-Add Ålesund into locations.txt
-> echo '\nAALESUND=62.469467785628,6.2369782900802155,0,270' >> Tools/autotest/locations.txt
-
-Also run the line below. It fixes a issue that is making the ardupilot sitl dds launch arducopter instead of the desired ardurover.
-```console
-mv ../../temp_files/launch.py Tools/ros2/ardupilot_sitl/src/ardupilot_sitl/launch.py
-
-cd ../../
 ```
 
 ### Micro XRCEDDS GEN
@@ -114,7 +108,7 @@ python3 -m pip install PyYAML mavproxy --user
 ```
 
 ### MAVROS 
-Head inside src and clone the following repo:
+MAVROS acts as a translator between mavlink and ROS, to install it run the following commands:
 ```console
 sudo apt install ros-humble-mavros
 ```
@@ -124,18 +118,22 @@ sudo /opt/ros/humble/lib/mavros/install_geographiclib_datasets.sh
 ```
 
 ### Other packages:
+```console
 sudo apt install ros-humble-xacro
+```
+
 ## Build
 After all the tiresome steps are completed it is time to build:
 
 > colcon build
 
 ## Run
-
 Then inside the usv simulator workspace run:
 ```console
 source install/setup.bash
 ros2 launch usv_simulator usv_simulator.launch.py gcs_url:=udp://@<your_gcs_ip>:<your_gcs_port>
 ```
-
-## More updates are coming
+You can then open a instance of QGroundControl or any other mavlink compatible mission planner.
+## More updates to the project will defintly come. 
+* Create more launch parameters such that the simulator can run without mavros and micro ros agent.
+* Decouple simulator scenario such that more tasks/environments
