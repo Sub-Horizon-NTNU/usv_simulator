@@ -121,6 +121,7 @@ public:
         double roll, pitch, yaw;
         m.getRPY(roll, pitch, yaw);
         current_heading_ = yaw;
+
     }
 
     void update_boat_position(){
@@ -184,6 +185,7 @@ public:
                 buoy_msg.z = buoy.z; // NED: Depth // 2D distance
                 buoy_msg.color = buoy.color;
                 buoy_publisher_->publish(buoy_msg);
+                //RCLCPP_INFO(this->get_logger(),"BUOY: [%.2f, %.2f, %.2f], usv orientation: %.2f color: %s",buoy.x,buoy.y,buoy.z, current_heading_*180.0/M_PI,buoy_msg.color.c_str());
             }
         }
 

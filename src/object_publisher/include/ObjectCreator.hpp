@@ -32,12 +32,14 @@ public:
     }
 bool try_get_viewed_objects_relative_position(std::vector<Object> &objects, const double &usv_x, const double &usv_y, const double &usv_heading){
         std::vector<Object> detected_objects;
+        double half_field_of_view_rad = field_of_view_*0.5*M_PI/180.0;
+        
         for(const auto &object : objects_){
             double distance = std::hypot(object.x-usv_x,object.y-usv_y);
             double object_angle = std::atan2(object.y-usv_y,object.x-usv_x);
             double angle_diff = object_angle-usv_heading;
 
-            if(distance <= max_radius_ && distance > min_radius_ && angle_diff <= field_of_view_*0.5*M_PI/180.0){
+            if(distance <= max_radius_ && distance > min_radius_ && angle_diff <= half_field_of_view_rad && std::cos(angle_diff)*distance > 0.0){
                 Object detected_object;
                 detected_object.x = std::cos(angle_diff)*distance;
                 detected_object.y = std::sin(angle_diff)*distance;
