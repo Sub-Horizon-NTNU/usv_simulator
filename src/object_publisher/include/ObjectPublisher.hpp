@@ -52,37 +52,37 @@ public:
         
     // Obstacle challenge.
         //Add buoys to the map ("Hardcoded", must be same in the simulator)
-        buoys_->add_objects_on_line(10,-1.5,0,"Red",0,10.0f,10);
-        buoys_->add_objects_on_line(10,1.5,0,"Green",0,10.0f,10);
-        buoys_->add_object(35, 0.2, 0.0, "Yellow");
-        buoys_->add_object(55, -0.2, 0.0, "Yellow");
+        buoys_->add_objects_on_line(10,-1.5,0,"Red_ob",0,10.0f,10);
+        buoys_->add_objects_on_line(10,1.5,0,"Green_ob",0,10.0f,10);
+        buoys_->add_object(35, 0.2, 0.0, "Yellow_ob");
+        buoys_->add_object(55, -0.2, 0.0, "Yellow_ob");
 
     //Collision avoidance:
-        buoys_->add_object(1.5, -20, 0.0, "Red");
-        buoys_->add_object(-1.5, -20, 0.0, "Green");
+        buoys_->add_object(1.5, -20, 0.0, "Red_co_av_1");
+        buoys_->add_object(-1.5, -20, 0.0, "Green_co_av_1");
         
         boat1_start_x = 20;
         boat1_start_y = -35;
         boats_->add_object(boat1_start_x,boat1_start_y,0,"boat_1");
 
-        buoys_->add_object(1.5, -50, 0.0, "Red");
-        buoys_->add_object(-1.5,-50, 0.0, "Green");
+        buoys_->add_object(1.5, -50, 0.0, "Red_co_av_2");
+        buoys_->add_object(-1.5,-50, 0.0, "Green_co_av_2");
         
         boat2_start_x = 20;
         boat2_start_y = -65;
         boats_->add_object(boat2_start_x,boat2_start_y,0,"boat_2");
 
-        buoys_->add_object(1.5, -80, 0.0, "Red");
-        buoys_->add_object(-1.5, -80, 0.0, "Green");
+        buoys_->add_object(1.5, -80, 0.0, "Red_co_av_3");
+        buoys_->add_object(-1.5, -80, 0.0, "Green_co_av_3");
 
     //Docking challenge
-        buoys_->add_object(1.5, 20, 0.0, "Red");
-        buoys_->add_object(-1.5, 20, 0.0, "Green");
+        buoys_->add_object(1.5, 20, 0.0, "Red_dock1");
+        buoys_->add_object(-1.5, 20, 0.0, "Green_dock1");
 
     //Speed gate
-        buoys_->add_object(-10, -1.5, 0.0, "Green");
-        buoys_->add_object(-10, 1.5, 0.0, "Red");
-        buoys_->add_object(-40, 0, 0.0, "Yellow");
+        buoys_->add_object(-10, -1.5, 0.0, "Green_speed");
+        buoys_->add_object(-10, 1.5, 0.0, "Red_speed");
+        buoys_->add_object(-40, 0, 0.0, "Yellow_speed");
     
         boat1_position_publisher_ = this->create_publisher<sensor_msgs::msg::JointState>("/boat1/position", 10);
         boat2_position_publisher_ = this->create_publisher<sensor_msgs::msg::JointState>("/boat2/position", 10);
