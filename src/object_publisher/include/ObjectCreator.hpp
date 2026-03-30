@@ -15,6 +15,9 @@ struct Object {
     double x{};
     double y{};
     double z{};
+    double vx;
+    double vy;
+    std::string id;
     std::string color{};
 };
 
@@ -66,7 +69,7 @@ bool try_get_viewed_objects_relative_position(std::vector<Object> &objects, cons
             add_object(start_x+spacing_x*static_cast<double>(i), start_y+spacing_y*static_cast<double>(i), z, color);
         }
     }
-    void set_object_position(int index, double x, double y){
+    void set_object_position(unsigned int index, double x, double y){
 
         if(objects_.size()>=index){
             objects_[index].x = x;
@@ -74,12 +77,12 @@ bool try_get_viewed_objects_relative_position(std::vector<Object> &objects, cons
 
         }
     }
-    void set_object_position_y(int index, double y){
+    void set_object_position_y(unsigned int index, double y){
         if(objects_.size()>=index){
             objects_[index].y = y;
         }
     }
-    void set_object_position_x(int index, double x){
+    void set_object_position_x(unsigned int index, double x){
         if(objects_.size()>=index){
             objects_[index].x = x;
         }

@@ -5,10 +5,7 @@
 
 #include "rclcpp/rclcpp.hpp"
 
-#include "object_msgs/msg/buoy.hpp"
-#include "object_msgs/msg/buoys.hpp"
-#include "object_msgs/msg/boat.hpp"
-#include "object_msgs/msg/boats.hpp"
+#include <object_msgs/msg/object.hpp>
 
 #include <nav_msgs/msg/odometry.hpp>
 #include <sensor_msgs/msg/detail/joint_state__struct.hpp>
@@ -22,6 +19,7 @@
 #include <chrono>
 #include <ObjectCreator.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
+
 
 //#include <pugixml.hpp>
 
@@ -93,8 +91,7 @@ public:
         position_subscriber_= this->create_subscription<nav_msgs::msg::Odometry>(
             "/sensors/odometry", qos_geo_pose, std::bind(&ObjectPublisher::position_cb, this, std::placeholders::_1));
         
-        buoy_publisher_ = this->create_publisher<object_msgs::msg::Buoy>("selene/object_detector/buoy",10);
-        boat_publisher_ = this->create_publisher<object_msgs::msg::Boat>("selene/object_detector/boat",10);
+        object_publisher_ = this->create_publisher<object_msgs::msg::Object>("selene/object_detector/object",10);
         
         buoy_timer_ = this->create_wall_timer(
             std::chrono::milliseconds(detection_rate),
@@ -148,8 +145,7 @@ public:
         boat_1_pos.position = {position_boat_1, angle_boat_1 };
         boat1_position_publisher_->publish(boat_1_pos);
 
-
-         static bool direction_boat_2;
+        static bool direction_boat_2;
         if (position_boat_2 >= 40.0){
             direction_boat_2 = true;
         }
@@ -171,20 +167,18 @@ public:
         boat_2_pos.position = {position_boat_2, angle_boat_2 };
         boat2_position_publisher_->publish(boat_2_pos);
 
-        
-        
     }
 
     void publish_viewed_objects(){
         if(buoys_->try_get_viewed_objects_relative_position(buoy_objects_,current_position_.pose.pose.position.x,current_position_.pose.pose.position.y, current_heading_))
         {
             for(const auto &buoy: buoy_objects_){
-                object_msgs::msg::Buoy buoy_msg;
-                buoy_msg.x = buoy.x; // NED: 
-                buoy_msg.y = buoy.y; // NED: 
-                buoy_msg.z = buoy.z; // NED: Depth // 2D distance
-                buoy_msg.color = buoy.color;
-                buoy_publisher_->publish(buoy_msg);
+                object_msgs::msg::Object object_msg;
+                object_msg.position_x = buoy.x; // NED: 
+                object_msg.position_y = buoy.y; // NED: 
+                object_msg.position_z = buoy.z; // NED: Depth // 2D distance
+                object_msg.color = buoy.color;
+                object_publisher_->publish(object_msg);
                 //RCLCPP_INFO(this->get_logger(),"BUOY: [%.2f, %.2f, %.2f], usv orientation: %.2f color: %s",buoy.x,buoy.y,buoy.z, current_heading_*180.0/M_PI,buoy_msg.color.c_str());
             }
         }
@@ -192,12 +186,12 @@ public:
         if(boats_->try_get_viewed_objects_relative_position(boat_objects_, current_position_.pose.pose.position.x, current_position_.pose.pose.position.y, current_heading_))
         {
             for(const auto &boat: boat_objects_){
-                object_msgs::msg::Boat boat_msg;
-                boat_msg.pos_x = boat.x; // NED: 
-                boat_msg.pos_y = boat.y; // NED: 
-                boat_msg.pos_z = boat.z; // NED: Depth // 2D distance
-                boat_msg.color = boat.color;
-                boat_publisher_->publish(boat_msg);
+                object_msgs::msg::Object object_msg;
+                object_msg.position_x = boat.x; // NED: 
+                object_msg.position_y = boat.y; // NED: 
+                object_msg.position_z = boat.z; // NED: Depth // 2D distance
+                object_msg.color = boat.color;
+                object_publisher_->publish(object_msg);
             }
         }
     }
@@ -234,8 +228,7 @@ private:
     rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr boat2_position_publisher_;
 
     rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr position_subscriber_;
-    rclcpp::Publisher<object_msgs::msg::Buoy>::SharedPtr buoy_publisher_;
-    rclcpp::Publisher<object_msgs::msg::Boat>::SharedPtr boat_publisher_;
+    rclcpp::Publisher<object_msgs::msg::Object>::SharedPtr object_publisher_;
 
     rclcpp::TimerBase::SharedPtr buoy_timer_;
     rclcpp::TimerBase::SharedPtr boat_timer_;
