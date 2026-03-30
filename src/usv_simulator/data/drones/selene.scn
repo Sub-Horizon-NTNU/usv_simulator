@@ -371,7 +371,7 @@
 
     <!--Sensors-->
         <sensor name="Dcam" rate="30.0" type="depthcamera">
-            <specs resolution_x="1920" resolution_y="1080" horizontal_fov="105.0" vertical_fov="78.0" depth_min="0.2" depth_max="20.0"/>
+            <specs resolution_x="1920" resolution_y="1080" horizontal_fov="72.0" vertical_fov="44.0" depth_min="0.2" depth_max="20.0"/>
             <noise depth="0.02"/>
             <origin xyz="0.6 0.0 -0.2" rpy="-1.57079632679 -3.14159265359-1.57079632679"/>
             <link name="Base"/>
@@ -379,14 +379,14 @@
         </sensor>
 
         <sensor name="Ccam" rate="30.0" type="camera">
-            <specs resolution_x="1920" resolution_y="1080" horizontal_fov="105.0" vertical_fov="78.0"/>
+            <specs resolution_x="1920" resolution_y="1080" horizontal_fov="72.0" vertical_fov="44.0"/>
             <origin xyz="0.6 0.0 -0.2" rpy="-1.57079632679 -3.14159265359-1.57079632679"/>
             <link name="Base"/>
             <ros_publisher topic="/sensors/color_camera"/>
         </sensor>
 
         <sensor name="SCam" rate="5.0" type="segmentation">
-            <specs resolution_x="1920" resolution_y="1080" horizontal_fov="105.0" vertical_fov="78.0"/>
+            <specs resolution_x="1920" resolution_y="1080" horizontal_fov="72.0" vertical_fov="44.0"/>
             <origin xyz="0.6 0.0 -0.2" rpy="-1.57079632679 -3.14159265359-1.57079632679"/>
             <link name="Base"/>
             <ros_publisher topic="/sensors/segmentation_camera"/>
