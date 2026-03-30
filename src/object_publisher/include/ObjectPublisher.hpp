@@ -74,13 +74,16 @@ public:
 
         buoys_->add_object(1.5, -80, 0.0, "Red");
         buoys_->add_object(-1.5, -80, 0.0, "Green");
-    //Docking challenge
 
+    //Docking challenge
         buoys_->add_object(1.5, 20, 0.0, "Red");
         buoys_->add_object(-1.5, 20, 0.0, "Green");
-       
 
-        
+    //Speed gate
+        buoys_->add_object(-10, -1.5, 0.0, "Green");
+        buoys_->add_object(-10, 1.5, 0.0, "Red");
+        buoys_->add_object(-40, 0, 0.0, "Yellow");
+    
         boat1_position_publisher_ = this->create_publisher<sensor_msgs::msg::JointState>("/boat1/position", 10);
         boat2_position_publisher_ = this->create_publisher<sensor_msgs::msg::JointState>("/boat2/position", 10);
 
@@ -166,7 +169,6 @@ public:
         boat_2_pos.name = {"boat2/piston", "boat2/rotation"};
         boat_2_pos.position = {position_boat_2, angle_boat_2 };
         boat2_position_publisher_->publish(boat_2_pos);
-
     }
 
     void publish_viewed_objects(){
