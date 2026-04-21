@@ -52,37 +52,37 @@ public:
         
     // Obstacle challenge.
         //Add buoys to the map ("Hardcoded", must be same in the simulator)
-        buoys_->add_objects_on_line(10,-1.5,0,"Red_ob",0,10.0f,10);
-        buoys_->add_objects_on_line(10,1.5,0,"Green_ob",0,10.0f,10);
-        buoys_->add_object(35, 0.2, 0.0, "Yellow_ob");
-        buoys_->add_object(55, -0.2, 0.0, "Yellow_ob");
+        buoys_->add_objects_on_line(10,-1.5,0,"red",0,10.0f,10);
+        buoys_->add_objects_on_line(10,1.5,0,"green",0,10.0f,10);
+        buoys_->add_object(35, 0.2, 0.0, "yellow");
+        buoys_->add_object(55, -0.2, 0.0, "yellow");
 
     //Collision avoidance:
-        buoys_->add_object(1.5, -20, 0.0, "Red_co_av_1");
-        buoys_->add_object(-1.5, -20, 0.0, "Green_co_av_1");
+        buoys_->add_object(1.5, -20, 0.0, "red");
+        buoys_->add_object(-1.5, -20, 0.0, "green");
         
         boat1_start_x = 20;
         boat1_start_y = -35;
         boats_->add_object(boat1_start_x,boat1_start_y,0,"boat_1");
 
-        buoys_->add_object(1.5, -50, 0.0, "Red_co_av_2");
-        buoys_->add_object(-1.5,-50, 0.0, "Green_co_av_2");
+        buoys_->add_object(1.5, -50, 0.0, "red");
+        buoys_->add_object(-1.5,-50, 0.0, "green");
         
         boat2_start_x = 20;
         boat2_start_y = -65;
         boats_->add_object(boat2_start_x,boat2_start_y,0,"boat_2");
 
-        buoys_->add_object(1.5, -80, 0.0, "Red_co_av_3");
-        buoys_->add_object(-1.5, -80, 0.0, "Green_co_av_3");
+        buoys_->add_object(1.5, -80, 0.0, "red");
+        buoys_->add_object(-1.5, -80, 0.0, "yellow");
 
     //Docking challenge
-        buoys_->add_object(1.5, 20, 0.0, "Red_dock1");
-        buoys_->add_object(-1.5, 20, 0.0, "Green_dock1");
+        buoys_->add_object(1.5, 20, 0.0, "red");
+        buoys_->add_object(-1.5, 20, 0.0, "green");
 
     //Speed gate
-        buoys_->add_object(-10, -1.5, 0.0, "Green_speed");
-        buoys_->add_object(-10, 1.5, 0.0, "Red_speed");
-        buoys_->add_object(-40, 0, 0.0, "Yellow_speed");
+        buoys_->add_object(-10, -1.5, 0.0, "green");
+        buoys_->add_object(-10, 1.5, 0.0, "red");
+        buoys_->add_object(-40, 0, 0.0, "yellow");
     
         boat1_position_publisher_ = this->create_publisher<sensor_msgs::msg::JointState>("/boat1/position", 10);
         boat2_position_publisher_ = this->create_publisher<sensor_msgs::msg::JointState>("/boat2/position", 10);
@@ -179,7 +179,11 @@ public:
                 object_msg.position_x = buoy.x; // NED: 
                 object_msg.position_y = buoy.y; // NED: 
                 object_msg.position_z = buoy.z; // NED: Depth // 2D distance
+                object_msg.header.stamp = this->now();
+                object_msg.header.frame_id = "camera";
                 object_msg.color = buoy.color;
+                object_msg.type = "static";
+
                 object_publisher_->publish(object_msg);
                 //RCLCPP_INFO(this->get_logger(),"BUOY: [%.2f, %.2f, %.2f], usv orientation: %.2f color: %s",buoy.x,buoy.y,buoy.z, current_heading_*180.0/M_PI,buoy_msg.color.c_str());
             }
@@ -192,7 +196,11 @@ public:
                 object_msg.position_x = boat.x; // NED: 
                 object_msg.position_y = boat.y; // NED: 
                 object_msg.position_z = boat.z; // NED: Depth // 2D distance
+                object_msg.header.stamp = this->now();
+                object_msg.header.frame_id = "camera";
                 object_msg.color = boat.color;
+                
+                object_msg.type = "dynamic";
                 object_publisher_->publish(object_msg);
             }
         }

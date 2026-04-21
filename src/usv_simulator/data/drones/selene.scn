@@ -59,7 +59,7 @@
             <external_part name="aluminium" type="model" physics="surface">
                 <physical>
                     <mesh filename="../meshes/1x1x1mm_cube.obj" scale="1"/>
-                    <origin rpy="0 0 0" xyz="0.0 0 0"/>
+                    <origin rpy="0 0 0" xyz="0.0 0 0.5"/>
                 </physical>
                 <visual>
                     <mesh filename="../meshes/Aluminium.obj" scale="1"/>
@@ -91,7 +91,7 @@
             <external_part name="light_column" type="model" physics="surface">
                 <physical>
                     <mesh filename="../meshes/1x1x1mm_cube.obj" scale="1"/>
-                    <origin rpy="0 0 0" xyz="0.00 0 0.0"/>
+                    <origin rpy="0 0 0" xyz="0.00 0 0.5"/>
                 </physical>
                 <visual>
                     <mesh filename="../meshes/light_column.obj" scale="1"/>
@@ -107,7 +107,7 @@
             <external_part name="wifi_antenna" type="model" physics="surface">
                 <physical>
                     <mesh filename="../meshes/1x1x1mm_cube.obj" scale="1"/>
-                    <origin rpy="0 0 0" xyz="0.0 0 0.0"/>
+                    <origin rpy="0 0 0" xyz="0.0 0 0.5"/>
                 </physical>
                 <visual>
                     <mesh filename="../meshes/wifi_antenna.obj" scale="1"/>
@@ -139,7 +139,7 @@
              <external_part name="camera_column" type="model" physics="surface">
                 <physical>
                     <mesh filename="../meshes/1x1x1mm_cube.obj" scale="1"/>
-                    <origin rpy="0 0 0" xyz="0.0 0 0.0"/>
+                    <origin rpy="0 0 0" xyz="0.0 0 0.5"/>
                 </physical>
                 <visual>
                     <mesh filename="../meshes/camera_column.obj" scale="1"/>
