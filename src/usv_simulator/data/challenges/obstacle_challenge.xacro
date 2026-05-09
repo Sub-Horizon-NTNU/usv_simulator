@@ -13,7 +13,7 @@
         </visual>
         <material name="Rock"/>
         <look name="${color}"/>
-        <world_transform xyz="${x} ${y} 0.0" rpy="0.0 0.0 0.0"/>
+        <world_transform xyz="${x} ${y} -0.05" rpy="0.0 0.0 0.0"/>
     </static>
 </xacro:macro>
 

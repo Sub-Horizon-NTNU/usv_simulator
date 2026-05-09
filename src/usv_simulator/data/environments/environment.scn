@@ -4,7 +4,7 @@
     <ned latitude="62.4694624523072" longitude="6.236972808837891"/> <!--Ålesund -->
     <ocean>   
         <water density="1031.0" jerlov="0.40"/>
-        <waves height="0.01"/>
+        <waves height="0.25"/>
         <particles enabled="true"/>
         <current type="uniform">
             <velocity xyz="0.0 0.0 0.0"/>

@@ -370,28 +370,20 @@
         </actuator> 
 
     <!--Sensors-->
-        <sensor name="Dcam" rate="30.0" type="depthcamera">
-            <specs resolution_x="1920" resolution_y="1080" horizontal_fov="72.0" vertical_fov="44.0" depth_min="0.2" depth_max="20.0"/>
+        <sensor name="Dcam" rate="60.0" type="depthcamera">
+            <specs resolution_x="1280" resolution_y="720" horizontal_fov="72.0" vertical_fov="44.0" depth_min="0.2" depth_max="20.0"/>
             <noise depth="0.02"/>
-            <origin xyz="0.6 0.0 -0.2" rpy="-1.57079632679 -3.14159265359-1.57079632679"/>
+            <origin xyz="0.35 0.0 -0.35" rpy="-1.57079632679 -3.14159265359-1.57079632679"/>
             <link name="Base"/>
-            <ros_publisher topic="/sensors/depth_camera"/>
+            <ros_publisher topic="selene/sensors/depth_camera"/>
         </sensor>
 
-        <sensor name="Ccam" rate="30.0" type="camera">
-            <specs resolution_x="1920" resolution_y="1080" horizontal_fov="72.0" vertical_fov="44.0"/>
-            <origin xyz="0.6 0.0 -0.2" rpy="-1.57079632679 -3.14159265359-1.57079632679"/>
+        <sensor name="Ccam" rate="60.0" type="camera">
+            <specs resolution_x="1280" resolution_y="720" horizontal_fov="72.0" vertical_fov="44.0"/>
+            <origin xyz="0.35 0.0 -0.35" rpy="-1.57079632679 -3.14159265359-1.57079632679"/>
             <link name="Base"/>
-            <ros_publisher topic="/sensors/color_camera"/>
+            <ros_publisher topic="selene/sensors/color_camera"/>
         </sensor>
-
-        <sensor name="SCam" rate="5.0" type="segmentation">
-            <specs resolution_x="1920" resolution_y="1080" horizontal_fov="72.0" vertical_fov="44.0"/>
-            <origin xyz="0.6 0.0 -0.2" rpy="-1.57079632679 -3.14159265359-1.57079632679"/>
-            <link name="Base"/>
-            <ros_publisher topic="/sensors/segmentation_camera"/>
-        </sensor>
-        
 
         <sensor name="imu" rate="100.0" type="imu">
             <range angular_velocity="10.0 10.0 10.0" linear_acceleration="10.0"/>
@@ -403,7 +395,7 @@
         </sensor>
 
         <sensor name="gps" rate="10" type="gps">
-            <noise ned_position="0.00005"/>
+            <noise ned_position="0.05"/>
             <history samples="10"/>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
             <link name="Base"/>
