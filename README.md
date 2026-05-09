@@ -77,11 +77,16 @@ cd ardupilot_selene/ && ./Tools/environment_install/install-prereqs-ubuntu.sh -y
 Start by installing the dependencies
 ```console
 sudo apt install python3-vcstool python3-rosdep
- vcs import --recursive --input  https://raw.githubusercontent.com/ArduPilot/ardupilot/master/Tools/ros2/ros2.repos src
 
-sudo rosdep init 
+vcs import --recursive \
+  --input src/ardupilot_selene/Tools/ros2/ros2.repos \
+  src
+
+sudo rosdep init
 rosdep update
+
 source /opt/ros/humble/setup.bash
+
 rosdep install --from-paths src --ignore-src -r -y
 ```
 #### Installing the MicroXRCEDDSGen build dependency:
