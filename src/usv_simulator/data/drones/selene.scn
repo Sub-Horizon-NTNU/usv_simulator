@@ -43,7 +43,7 @@
             <external_part name="black_rim" type="model" physics="surface">
                 <physical>
                     <mesh filename="../meshes/1x1x1mm_cube.obj" scale="1"/>
-                    <origin rpy="0 0 0" xyz="0.0 0 0"/>
+                    <origin rpy="0 0 0" xyz="0.0 0 0.1"/>
                 </physical>
                 <visual>
                     <mesh filename="../meshes/Black_.obj" scale="1"/>
@@ -123,7 +123,7 @@
             <external_part name="zed_camera" type="model" physics="surface">
                 <physical>
                     <mesh filename="../meshes/1x1x1mm_cube.obj" scale="1"/>
-                    <origin rpy="0 0 0" xyz="0.0 0 0.2"/>
+                    <origin rpy="0 0 0" xyz="0.0 0 0.3"/>
                 </physical>
                 <visual>
                     <mesh filename="../meshes/camera.obj" scale="1"/>
@@ -174,21 +174,6 @@
             <link name="Base"/>
         </light>
 
-   
-        <joint name="SensorJoint" type="fixed">
-            <parent name="Base"/>
-            <child name="SensorLink"/>
-            <origin xyz="0 0 -0.15" rpy="0.0 0.0 0"/>
-            <axis xyz="1.0 1.0 1.0"/>
-        </joint>
-
-        <link name="SensorLink" type="box" physics="surface">
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <dimensions xyz="0.001 0.0075 0.0015"/>
-            <material name="Undefined"/>
-            <look name="Gray"/>
-        </link>
-       
 
     <!--Servo1 & Thruster 1 (left hull front)-->
         <joint name="Joint1" type="revolute">
@@ -373,14 +358,14 @@
         <sensor name="Dcam" rate="60.0" type="depthcamera">
             <specs resolution_x="1280" resolution_y="720" horizontal_fov="72.0" vertical_fov="44.0" depth_min="0.2" depth_max="20.0"/>
             <noise depth="0.02"/>
-            <origin xyz="0.35 0.0 -0.35" rpy="-1.57079632679 -3.14159265359-1.57079632679"/>
+            <origin xyz="0.355 -0.06 -0.35" rpy="-1.57079632679 -3.14159265359-1.57079632679"/>
             <link name="Base"/>
             <ros_publisher topic="selene/sensors/depth_camera"/>
         </sensor>
 
         <sensor name="Ccam" rate="60.0" type="camera">
             <specs resolution_x="1280" resolution_y="720" horizontal_fov="72.0" vertical_fov="44.0"/>
-            <origin xyz="0.35 0.0 -0.35" rpy="-1.57079632679 -3.14159265359-1.57079632679"/>
+            <origin xyz="0.355 -0.06 -0.35" rpy="-1.57079632679 -3.14159265359-1.57079632679"/>
             <link name="Base"/>
             <ros_publisher topic="selene/sensors/color_camera"/>
         </sensor>

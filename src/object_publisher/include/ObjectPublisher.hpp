@@ -52,10 +52,35 @@ public:
         
     // Obstacle challenge.
         //Add buoys to the map ("Hardcoded", must be same in the simulator)
-        buoys_->add_objects_on_line(10,-1.5,0,"red",0,10.0f,10);
-        buoys_->add_objects_on_line(10,1.5,0,"green",0,10.0f,10);
-        buoys_->add_object(35, 0.2, 0.0, "yellow");
-        buoys_->add_object(55, -0.2, 0.0, "yellow");
+        // Channel 1 - Red buoys
+        buoys_->add_object(10, 0.0, 0.0, "red");
+        buoys_->add_object(20, 0.5, 0.0, "red");
+        buoys_->add_object(30, 1.0, 0.0, "red");
+        buoys_->add_object(40, 0.5, 0.0, "red");
+        buoys_->add_object(50, 0.0, 0.0, "red");
+        buoys_->add_object(60, -0.5, 0.0, "red");
+        buoys_->add_object(70, 0.5, 0.0, "red");
+        buoys_->add_object(80, 1.0, 0.0, "red");
+        buoys_->add_object(90, 1.5, 0.0, "red");
+        buoys_->add_object(100, 2.0, 0.0, "red");
+        // Channel 1 - Green buoys
+        buoys_->add_object(10, 2.5, 0.0, "green");
+        buoys_->add_object(20, 3.0, 0.0, "green");
+        buoys_->add_object(30, 3.5, 0.0, "green");
+        buoys_->add_object(40, 3.0, 0.0, "green");
+        buoys_->add_object(50, 2.5, 0.0, "green");
+        buoys_->add_object(60, 2.0, 0.0, "green");
+        buoys_->add_object(70, 3.0, 0.0, "green");
+        buoys_->add_object(80, 3.5, 0.0, "green");
+        buoys_->add_object(90, 4.0, 0.0, "green");
+        buoys_->add_object(100, 4.5, 0.0, "green");
+        // Obstacles
+        buoys_->add_object(45, 1.2, 0.0, "yellow");
+        buoys_->add_object(55, 0.7, 0.0, "yellow");
+        buoys_->add_object(65, 0.7, 0.0, "yellow");
+        buoys_->add_object(75, 1.7, 0.0, "yellow");
+        buoys_->add_object(85, 2.5, 0.0, "yellow");
+        buoys_->add_object(95, 2.7, 0.0, "yellow");
 
     //Collision avoidance:
         buoys_->add_object(1.5, -20, 0.0, "red");
