@@ -22,8 +22,8 @@
     </static>
 </xacro:macro>
 
-<xacro:buoy name="docking_red1" color="Red" x="1.5" y="20.0"/>
-<xacro:buoy name="docking_green1" color="Green" x="-1.5" y="20.0"/>
+<xacro:buoy name="docking_red1" color="Red" x="1.0" y="20.0"/>
+<xacro:buoy name="docking_green1" color="Green" x="-1.0" y="20.0"/>
 
 <xacro:dock x="0" y="22.5" z="0.0" dim_x="30.0" dim_y="2.5" dim_z = "0.3"/>
 
