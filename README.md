@@ -142,3 +142,10 @@ You can then open a instance of QGroundControl or any other mavlink compatible m
 ## More updates to the project will definitely come. 
 * Create more launch parameters such that the simulator can run without mavros and micro ros agent.
 * Decouple simulator scenario such that more tasks/environments can be selected.
+
+
+## Repository purpose and scope
+
+ROS 2 workspace for simulating Selene and the Autodrone tasks with Stonefish and ArduPilot SITL. The [main launch file](src/usv_simulator/launch/usv_simulator.launch.py) includes the ArduPilot SITL DDS launch setup.
+
+The GBR underwater ROV scenarios are in the separate [stonefish_simulator](https://github.com/Sub-Horizon-NTNU/stonefish_simulator) repository. Current PX4 controller compatibility and documentation gaps are listed in [docs/INCONSISTENCIES.md](docs/INCONSISTENCIES.md).
